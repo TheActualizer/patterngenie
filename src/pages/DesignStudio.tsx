@@ -150,32 +150,38 @@ export default function DesignStudio() {
   };
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="min-h-screen w-full flex items-center justify-center bg-gray-50">
+        Loading...
+      </div>
+    );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen w-full bg-gray-50">
       <Navbar />
-      <div className="container mx-auto py-6">
-        <h1 className="text-3xl font-display font-semibold text-center text-gray-900 mb-6">
-          Design Studio
-        </h1>
-        
-        <ProjectHeader
-          title={title}
-          setTitle={setTitle}
-          lastSaved={lastSaved}
-          isSaving={isSaving}
-          onSave={() => saveProject()}
-          onExport={handleExport}
-        />
-
-        <div className="mt-6 space-y-4 px-4 sm:px-6">
-          <DesignControls
-            prompt={prompt}
-            setPrompt={setPrompt}
+      <div className="w-full">
+        <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+          <h1 className="text-3xl font-display font-semibold text-center text-gray-900 mb-6">
+            Design Studio
+          </h1>
+          
+          <ProjectHeader
+            title={title}
+            setTitle={setTitle}
+            lastSaved={lastSaved}
+            isSaving={isSaving}
+            onSave={() => saveProject()}
+            onExport={handleExport}
           />
-          <PatternPreview onExport={handleExport} />
+
+          <div className="mt-6 grid gap-4">
+            <DesignControls
+              prompt={prompt}
+              setPrompt={setPrompt}
+            />
+            <PatternPreview onExport={handleExport} />
+          </div>
         </div>
       </div>
       <ChatBot />
