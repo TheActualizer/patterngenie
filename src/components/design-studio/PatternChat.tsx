@@ -26,12 +26,14 @@ export function PatternChat({ prompt, setPrompt, fabricType, designStyle }: Patt
   ]);
   const [input, setInput] = useState("");
   const [isTyping, setIsTyping] = useState(false);
-  const scrollAreaRef = useRef<HTMLDivElement>(null);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
 
   useEffect(() => {
-    if (scrollAreaRef.current) {
-      scrollAreaRef.current.scrollTop = scrollAreaRef.current.scrollHeight;
-    }
+    scrollToBottom();
   }, [messages]);
 
   const generateAssistantResponse = async (userMessage: string) => {
@@ -72,26 +74,36 @@ export function PatternChat({ prompt, setPrompt, fabricType, designStyle }: Patt
 
   return (
     <div className="flex flex-col h-[400px] border rounded-lg bg-white">
-      <ScrollArea className="flex-1 p-4" ref={scrollAreaRef}>
+      <ScrollArea className="flex-1 p-4">
         <div className="space-y-4">
           {messages.map((message, i) => (
             <div
               key={i}
               className={cn(
-                "flex w-max max-w-[80%] rounded-lg px-4 py-2",
-                message.role === "assistant"
-                  ? "bg-muted text-muted-foreground"
-                  : "bg-primary text-primary-foreground ml-auto"
+                "flex break-words",
+                message.role === "assistant" ? "justify-start" : "justify-end"
               )}
             >
-              {message.content}
+              <div
+                className={cn(
+                  "max-w-[80%] rounded-lg px-4 py-2",
+                  message.role === "assistant"
+                    ? "bg-muted text-muted-foreground"
+                    : "bg-primary text-primary-foreground"
+                )}
+              >
+                {message.content}
+              </div>
             </div>
           ))}
           {isTyping && (
-            <div className="bg-muted text-muted-foreground w-16 rounded-lg px-4 py-2">
-              ...
+            <div className="flex justify-start">
+              <div className="bg-muted text-muted-foreground w-16 rounded-lg px-4 py-2">
+                ...
+              </div>
             </div>
           )}
+          <div ref={messagesEndRef} />
         </div>
       </ScrollArea>
       
