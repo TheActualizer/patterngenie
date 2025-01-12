@@ -122,6 +122,9 @@ export type Database = {
           created_at: string
           full_name: string | null
           id: string
+          last_active_at: string | null
+          measurement_units: string | null
+          preferences: Json | null
           role: Database["public"]["Enums"]["user_role"] | null
           stripe_account_id: string | null
           stripe_customer_id: string | null
@@ -133,6 +136,9 @@ export type Database = {
           created_at?: string
           full_name?: string | null
           id: string
+          last_active_at?: string | null
+          measurement_units?: string | null
+          preferences?: Json | null
           role?: Database["public"]["Enums"]["user_role"] | null
           stripe_account_id?: string | null
           stripe_customer_id?: string | null
@@ -144,6 +150,9 @@ export type Database = {
           created_at?: string
           full_name?: string | null
           id?: string
+          last_active_at?: string | null
+          measurement_units?: string | null
+          preferences?: Json | null
           role?: Database["public"]["Enums"]["user_role"] | null
           stripe_account_id?: string | null
           stripe_customer_id?: string | null
@@ -151,6 +160,50 @@ export type Database = {
           username?: string | null
         }
         Relationships: []
+      }
+      projects: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          id: string
+          is_draft: boolean | null
+          pattern_data: Json
+          title: string
+          updated_at: string | null
+          user_id: string | null
+          version: number | null
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          is_draft?: boolean | null
+          pattern_data?: Json
+          title: string
+          updated_at?: string | null
+          user_id?: string | null
+          version?: number | null
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          is_draft?: boolean | null
+          pattern_data?: Json
+          title?: string
+          updated_at?: string | null
+          user_id?: string | null
+          version?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "projects_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       reviews: {
         Row: {
