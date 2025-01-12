@@ -63,7 +63,20 @@ export function MeasurementsSettings() {
       }
 
       if (data?.measurements) {
-        setMeasurements(data.measurements as unknown as Measurements);
+        const measurementsData = data.measurements as Record<string, string | null>;
+        setMeasurements({
+          bust: measurementsData.bust || null,
+          waist: measurementsData.waist || null,
+          hips: measurementsData.hips || null,
+          shoulder: measurementsData.shoulder || null,
+          arm_length: measurementsData.arm_length || null,
+          inseam: measurementsData.inseam || null,
+          neck: measurementsData.neck || null,
+          chest: measurementsData.chest || null,
+          back_width: measurementsData.back_width || null,
+          front_length: measurementsData.front_length || null,
+          sleeve_length: measurementsData.sleeve_length || null,
+        });
       }
     } catch (error) {
       console.error('Error:', error);
@@ -81,10 +94,24 @@ export function MeasurementsSettings() {
         return;
       }
 
+      const measurementsData: Record<string, string | null> = {
+        bust: measurements.bust,
+        waist: measurements.waist,
+        hips: measurements.hips,
+        shoulder: measurements.shoulder,
+        arm_length: measurements.arm_length,
+        inseam: measurements.inseam,
+        neck: measurements.neck,
+        chest: measurements.chest,
+        back_width: measurements.back_width,
+        front_length: measurements.front_length,
+        sleeve_length: measurements.sleeve_length,
+      };
+
       const { error } = await supabase
         .from('profiles')
         .update({
-          measurements: measurements as unknown as Json,
+          measurements: measurementsData as Json,
           updated_at: new Date().toISOString(),
         })
         .eq('id', session.user.id);
