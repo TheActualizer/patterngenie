@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { Json } from "@/integrations/supabase/types";
 import { Navbar } from "@/components/Navbar";
 import { useDebounce } from "@/hooks/use-debounce";
 import { ProjectHeader } from "@/components/design-studio/ProjectHeader";
@@ -126,7 +127,7 @@ export default function DesignStudio() {
         pattern_data: {
           prompt,
           measurements,
-        } as unknown as Json,
+        } as Json,
         user_id: session.session.user.id,
         is_draft: true,
       };
