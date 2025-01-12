@@ -60,12 +60,16 @@ export function Navbar() {
           Design Studio
         </Button>
       </Link>
-      <Link to="/classes">
+      <a 
+        href="https://www.facebook.com/studiosewme?mibextid=ZbWKwL" 
+        target="_blank" 
+        rel="noopener noreferrer"
+      >
         <Button variant="ghost" className="font-medium text-gray-600 hover:text-gray-900 hover:bg-purple-50">
           <GraduationCap className="w-4 h-4 mr-2" />
           Classes
         </Button>
-      </Link>
+      </a>
     </>
   );
 
