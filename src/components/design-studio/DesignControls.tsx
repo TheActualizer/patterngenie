@@ -1,38 +1,40 @@
-import { Button } from "@/components/ui/button";
-import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerTrigger } from "@/components/ui/drawer";
-import { Settings } from "lucide-react";
-import { AdvancedSettingsContent } from "./AdvancedSettingsContent";
 import { useState } from "react";
 import { AvatarCustomization } from "./AvatarCustomization";
+import { AdvancedSettingsContent } from "./AdvancedSettingsContent";
 import { PatternChat } from "./PatternChat";
+import {
+  Drawer,
+  DrawerTrigger,
+  DrawerContent,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerDescription,
+} from "@/components/ui/drawer";
+import { Button } from "@/components/ui/button";
+import { Settings2 } from "lucide-react";
 
-interface DesignControlsProps {
-  prompt: string;
-  setPrompt: (prompt: string) => void;
-}
-
-export const DesignControls = ({
-  prompt,
-  setPrompt,
-}: DesignControlsProps) => {
+export const DesignControls = () => {
   const [fabricType, setFabricType] = useState("woven");
   const [designStyle, setDesignStyle] = useState("casual");
   const [features, setFeatures] = useState<string[]>([]);
 
   return (
-    <div className="w-full bg-white/50 backdrop-blur-sm rounded-xl shadow-sm border border-gray-100/50 p-4 md:p-6 space-y-6">
+    <div className="w-full max-w-md lg:max-w-lg xl:max-w-xl bg-white/50 backdrop-blur-sm rounded-xl shadow-sm border border-gray-100/50 p-4 md:p-6 space-y-6">
       <AvatarCustomization />
       
       <Drawer>
         <DrawerTrigger asChild>
-          <Button variant="outline" className="w-full gap-2 hover:bg-primary hover:text-white transition-colors">
-            <Settings className="w-4 h-4" />
+          <Button variant="outline" className="w-full">
+            <Settings2 className="w-4 h-4 mr-2" />
             Advanced Settings
           </Button>
         </DrawerTrigger>
         <DrawerContent>
           <DrawerHeader>
             <DrawerTitle>Advanced Pattern Settings</DrawerTitle>
+            <DrawerDescription>
+              Fine-tune your pattern with advanced customization options
+            </DrawerDescription>
           </DrawerHeader>
           <AdvancedSettingsContent
             fabricType={fabricType}
@@ -45,12 +47,7 @@ export const DesignControls = ({
         </DrawerContent>
       </Drawer>
 
-      <PatternChat 
-        prompt={prompt}
-        setPrompt={setPrompt}
-        fabricType={fabricType}
-        designStyle={designStyle}
-      />
+      <PatternChat />
     </div>
   );
 };

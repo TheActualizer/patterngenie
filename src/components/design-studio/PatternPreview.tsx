@@ -56,7 +56,7 @@ export const PatternPreview = ({ onExport }: PatternPreviewProps) => {
   };
 
   return (
-    <div className="w-full space-y-6">
+    <div className="w-full max-w-2xl lg:max-w-3xl xl:max-w-4xl space-y-6">
       <div className="w-full bg-white rounded-lg shadow-sm border border-gray-100 p-4 md:p-6">
         <h3 className="text-lg font-semibold mb-4 text-gray-900">3D Preview</h3>
         <div className="aspect-[3/4] bg-gray-50 rounded-lg border-2 border-dashed border-gray-200 flex items-center justify-center mb-4 transition-colors hover:bg-gray-100/50">
