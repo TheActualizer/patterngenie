@@ -65,20 +65,16 @@ const AuthPage = () => {
       console.log("Auth state changed:", event, session);
       if (event === "SIGNED_IN") {
         try {
-          const response = await fetch("/api/create-checkout-session", {
-            method: "POST",
+          // Update to use Supabase Functions invoke
+          const { data, error } = await supabase.functions.invoke('create-checkout-session', {
             headers: {
-              "Content-Type": "application/json",
               Authorization: `Bearer ${session?.access_token}`,
             },
           });
 
-          if (!response.ok) {
-            throw new Error('Failed to create checkout session');
-          }
+          if (error) throw error;
 
-          const data = await response.json();
-          if (data.url) {
+          if (data?.url) {
             window.location.href = data.url;
           } else {
             toast({
@@ -94,6 +90,8 @@ const AuthPage = () => {
             title: "Error",
             description: "There was a problem setting up your payment. Please try again.",
           });
+          // Still navigate to home on error
+          navigate("/");
         }
       }
       if (event === "SIGNED_OUT") {
