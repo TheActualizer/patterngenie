@@ -5,9 +5,12 @@ type Pattern = Database["public"]["Tables"]["patterns"]["Row"] & {
   profiles: { full_name: string | null } | null;
 };
 
+type PatternCategory = Database["public"]["Enums"]["pattern_category"];
+type DifficultyLevel = Database["public"]["Enums"]["difficulty_level"];
+
 export async function loadMarketplacePatterns(
-  category: string,
-  difficulty: string,
+  category: PatternCategory | "all",
+  difficulty: DifficultyLevel | "all",
   sortBy: string
 ) {
   try {
@@ -16,10 +19,10 @@ export async function loadMarketplacePatterns(
       .select('*, profiles(full_name)')
       .eq('is_approved', true);
 
-    if (category && category !== "all") {
+    if (category !== "all") {
       query = query.eq('category', category);
     }
-    if (difficulty && difficulty !== "all") {
+    if (difficulty !== "all") {
       query = query.eq('difficulty', difficulty);
     }
 
