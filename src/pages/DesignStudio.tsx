@@ -72,14 +72,22 @@ export default function DesignStudio() {
 
       if (project) {
         setTitle(project.title);
-        const patternData = project.pattern_data as PatternData;
+        // Safely cast the pattern_data to PatternData with type checking
+        const patternData = project.pattern_data as { prompt?: string; measurements?: { bust: number; waist: number; hips: number; } };
         setPrompt(patternData.prompt || "");
         setMeasurements(patternData.measurements || {
           bust: 36,
           waist: 28,
           hips: 38,
         });
-        setProjectData(patternData);
+        setProjectData({
+          prompt: patternData.prompt || "",
+          measurements: patternData.measurements || {
+            bust: 36,
+            waist: 28,
+            hips: 38,
+          }
+        });
         setLastSaved(new Date(project.updated_at));
       }
     } catch (error) {
@@ -98,7 +106,7 @@ export default function DesignStudio() {
         return;
       }
 
-      const currentPatternData = {
+      const currentPatternData: PatternData = {
         prompt,
         measurements,
       };
