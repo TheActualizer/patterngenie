@@ -23,14 +23,14 @@ export const ProjectHeader = ({
   onExport,
 }: ProjectHeaderProps) => {
   return (
-    <div className="flex justify-between items-center mb-6">
+    <div className="flex justify-between items-center mb-6 bg-white rounded-lg shadow-sm border border-gray-100 p-4">
       <div className="flex items-center gap-4">
         <Input
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           className="text-xl font-semibold bg-transparent border-0 px-0 focus-visible:ring-0 w-[300px]"
         />
-        <span className="text-sm text-muted-foreground">
+        <span className="text-sm text-gray-500">
           {lastSaved ? `Last saved ${lastSaved.toLocaleTimeString()}` : "Not saved yet"}
         </span>
       </div>

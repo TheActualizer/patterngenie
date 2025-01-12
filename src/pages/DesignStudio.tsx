@@ -130,10 +130,7 @@ export default function DesignStudio() {
           .select()
           .single();
           
-        if (error) {
-          console.error('Error updating project:', error);
-          throw error;
-        }
+        if (error) throw error;
         result = { data, error };
       } else {
         console.log('Creating new project');
@@ -143,14 +140,9 @@ export default function DesignStudio() {
           .select()
           .single();
           
-        if (error) {
-          console.error('Error creating project:', error);
-          throw error;
-        }
+        if (error) throw error;
         result = { data, error };
       }
-
-      if (result.error) throw result.error;
 
       setLastSaved(new Date());
       
@@ -187,9 +179,9 @@ export default function DesignStudio() {
   }, [prompt, measurements]);
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-gray-50">
       <Navbar />
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 py-8 max-w-7xl">
         <ProjectHeader
           title={title}
           setTitle={setTitle}
@@ -200,14 +192,16 @@ export default function DesignStudio() {
           onExport={handleExport}
         />
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <DesignControls
-            prompt={prompt}
-            setPrompt={setPrompt}
-            measurements={measurements}
-            setMeasurements={setMeasurements}
-          />
-          <div className="lg:col-span-2 space-y-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div>
+            <DesignControls
+              prompt={prompt}
+              setPrompt={setPrompt}
+              measurements={measurements}
+              setMeasurements={setMeasurements}
+            />
+          </div>
+          <div className="lg:col-span-2">
             <PatternPreview onExport={handleExport} />
           </div>
         </div>

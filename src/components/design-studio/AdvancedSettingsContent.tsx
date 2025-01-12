@@ -29,37 +29,37 @@ export const AdvancedSettingsContent = ({
   };
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-6 space-y-8">
       <div className="space-y-4">
-        <h4 className="text-sm font-semibold">Fabric Type</h4>
+        <h4 className="text-sm font-semibold text-gray-900">Fabric Type</h4>
         <RadioGroup value={fabricType} onValueChange={setFabricType} className="gap-3">
           {["Woven", "Knit", "Stretch", "Non-stretch", "Lightweight", "Medium weight", "Heavyweight"].map((type) => (
-            <div key={type} className="flex items-center space-x-2">
+            <div key={type} className="flex items-center space-x-3">
               <RadioGroupItem value={type.toLowerCase()} id={`fabric-${type}`} />
-              <Label htmlFor={`fabric-${type}`}>{type}</Label>
+              <Label htmlFor={`fabric-${type}`} className="text-sm text-gray-700">{type}</Label>
             </div>
           ))}
         </RadioGroup>
       </div>
 
-      <Separator />
+      <Separator className="bg-gray-100" />
 
       <div className="space-y-4">
-        <h4 className="text-sm font-semibold">Design Style</h4>
+        <h4 className="text-sm font-semibold text-gray-900">Design Style</h4>
         <RadioGroup value={designStyle} onValueChange={setDesignStyle} className="gap-3">
           {["Casual", "Formal", "Bohemian", "Minimalist", "Vintage", "Modern", "Romantic"].map((style) => (
-            <div key={style} className="flex items-center space-x-2">
+            <div key={style} className="flex items-center space-x-3">
               <RadioGroupItem value={style.toLowerCase()} id={`style-${style}`} />
-              <Label htmlFor={`style-${style}`}>{style}</Label>
+              <Label htmlFor={`style-${style}`} className="text-sm text-gray-700">{style}</Label>
             </div>
           ))}
         </RadioGroup>
       </div>
 
-      <Separator />
+      <Separator className="bg-gray-100" />
 
       <div className="space-y-4">
-        <h4 className="text-sm font-semibold">Additional Features</h4>
+        <h4 className="text-sm font-semibold text-gray-900">Additional Features</h4>
         <div className="grid grid-cols-2 gap-4">
           {[
             "Pockets",
@@ -75,13 +75,13 @@ export const AdvancedSettingsContent = ({
             "Gathered details",
             "Ruffles",
           ].map((feature) => (
-            <div key={feature} className="flex items-center space-x-2">
+            <div key={feature} className="flex items-center space-x-3">
               <Checkbox
                 id={`feature-${feature}`}
                 checked={features.includes(feature.toLowerCase())}
                 onCheckedChange={() => handleFeatureToggle(feature.toLowerCase())}
               />
-              <Label htmlFor={`feature-${feature}`}>{feature}</Label>
+              <Label htmlFor={`feature-${feature}`} className="text-sm text-gray-700">{feature}</Label>
             </div>
           ))}
         </div>
