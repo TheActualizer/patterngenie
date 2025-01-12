@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useToast } from "@/components/ui/use-toast";
-import { UserCircle2, FolderOpen } from "lucide-react";
+import { UserCircle2, FolderOpen, Scissors } from "lucide-react";
 import { SettingsDialog } from "./settings/SettingsDialog";
 
 export function Navbar() {
@@ -49,17 +49,22 @@ export function Navbar() {
   };
 
   return (
-    <nav className="border-b">
+    <nav className="border-b bg-white/80 backdrop-blur-md sticky top-0 z-50">
       <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-        <Link to="/" className="flex items-center space-x-2">
-          <span className="font-display text-2xl text-primary">PatternGenie</span>
+        <Link to="/" className="flex items-center space-x-3 group">
+          <div className="w-10 h-10 bg-gradient-to-br from-[#9b87f5] to-[#7E69AB] rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300">
+            <Scissors className="w-6 h-6 text-white transform -rotate-45 group-hover:rotate-0 transition-transform duration-300" />
+          </div>
+          <span className="font-display text-2xl bg-gradient-to-r from-[#9b87f5] to-[#7E69AB] bg-clip-text text-transparent font-semibold">
+            PatternGenie
+          </span>
         </Link>
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center space-x-6">
           <Link to="/marketplace">
-            <Button variant="ghost">Marketplace</Button>
+            <Button variant="ghost" className="font-medium">Marketplace</Button>
           </Link>
           <Link to="/design-studio">
-            <Button variant="ghost">Design Studio</Button>
+            <Button variant="ghost" className="font-medium">Design Studio</Button>
           </Link>
           
           {user ? (
@@ -99,7 +104,7 @@ export function Navbar() {
             </>
           ) : (
             <Link to="/auth">
-              <Button>Sign In</Button>
+              <Button size="lg">Sign In</Button>
             </Link>
           )}
         </div>
