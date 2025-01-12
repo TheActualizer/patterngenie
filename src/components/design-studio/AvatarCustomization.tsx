@@ -46,15 +46,20 @@ export const AvatarCustomization = () => {
   const [frontImageUrl, setFrontImageUrl] = useState<string | null>(null);
   const [sideImageUrl, setSideImageUrl] = useState<string | null>(null);
   const [measurements, setMeasurements] = useState<Measurements>(defaultMeasurements);
-  const [syncWithProfile, setSyncWithProfile] = useState(false);
+  const [syncWithProfile, setSyncWithProfile] = useState(true); // Default to true for better UX
   const [loading, setLoading] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
+  // Load measurements whenever the dialog opens
   useEffect(() => {
-    loadProfileMeasurements();
-  }, []);
+    if (isOpen) {
+      loadProfileMeasurements();
+    }
+  }, [isOpen]);
 
   const loadProfileMeasurements = async () => {
     try {
+      console.log('Loading profile measurements...');
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) return;
 
@@ -64,7 +69,12 @@ export const AvatarCustomization = () => {
         .eq('id', session.user.id)
         .single();
 
-      if (error) throw error;
+      if (error) {
+        console.error('Error loading measurements:', error);
+        throw error;
+      }
+
+      console.log('Loaded profile data:', data);
 
       if (data?.measurements) {
         // Ensure type safety by explicitly mapping the measurements
@@ -83,6 +93,7 @@ export const AvatarCustomization = () => {
           sleeve_length: measurementsData.sleeve_length || null,
         };
         setMeasurements(typedMeasurements);
+        console.log('Updated measurements state:', typedMeasurements);
       }
       
       if (data?.avatar_front_url) {
@@ -94,6 +105,7 @@ export const AvatarCustomization = () => {
       }
     } catch (error) {
       console.error('Error loading measurements:', error);
+      toast.error("Failed to load measurements");
     }
   };
 
@@ -185,10 +197,15 @@ export const AvatarCustomization = () => {
       ...prev,
       [key]: value
     }));
+
+    // If syncWithProfile is true, save to profile immediately
+    if (syncWithProfile) {
+      handleSaveMeasurements(true);
+    }
   };
 
-  const handleSaveMeasurements = async () => {
-    if (!syncWithProfile) {
+  const handleSaveMeasurements = async (silent = false) => {
+    if (!syncWithProfile && !silent) {
       toast.success("Avatar measurements saved for this project");
       return;
     }
@@ -215,6 +232,8 @@ export const AvatarCustomization = () => {
         sleeve_length: measurements.sleeve_length,
       };
 
+      console.log('Saving measurements to profile:', measurementsData);
+
       const { error } = await supabase
         .from('profiles')
         .update({
@@ -224,10 +243,17 @@ export const AvatarCustomization = () => {
         .eq('id', session.user.id);
 
       if (error) throw error;
-      toast.success("Measurements saved to your profile");
+      
+      if (!silent) {
+        toast.success("Measurements saved to your profile");
+      }
+      
+      console.log('Measurements saved successfully');
     } catch (error) {
       console.error('Error saving measurements:', error);
-      toast.error("Failed to save measurements to profile");
+      if (!silent) {
+        toast.error("Failed to save measurements to profile");
+      }
     } finally {
       setLoading(false);
     }
@@ -248,7 +274,7 @@ export const AvatarCustomization = () => {
   ] as const;
 
   return (
-    <Dialog>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Button variant="outline" className="w-full">Customize Avatar</Button>
       </DialogTrigger>
