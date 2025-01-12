@@ -42,12 +42,15 @@ export const AvatarCustomization = () => {
   const [gender, setGender] = useState<"male" | "female">("female");
   const [frontImage, setFrontImage] = useState<File | null>(null);
   const [sideImage, setSideImage] = useState<File | null>(null);
+  const [frontImageUrl, setFrontImageUrl] = useState<string | null>(null);
+  const [sideImageUrl, setSideImageUrl] = useState<string | null>(null);
   const [measurements, setMeasurements] = useState<Measurements>(defaultMeasurements);
   const [syncWithProfile, setSyncWithProfile] = useState(false);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     loadProfileMeasurements();
+    loadExistingPhotos();
   }, []);
 
   const loadProfileMeasurements = async () => {
@@ -71,7 +74,69 @@ export const AvatarCustomization = () => {
     }
   };
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>, type: "front" | "side") => {
+  const loadExistingPhotos = async () => {
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) return;
+
+      const userId = session.user.id;
+      
+      // Check if front photo exists
+      const { data: frontData } = await supabase.storage
+        .from('avatars')
+        .createSignedUrl(`${userId}/front.jpg`, 3600);
+      
+      if (frontData?.signedUrl) {
+        setFrontImageUrl(frontData.signedUrl);
+      }
+
+      // Check if side photo exists
+      const { data: sideData } = await supabase.storage
+        .from('avatars')
+        .createSignedUrl(`${userId}/side.jpg`, 3600);
+      
+      if (sideData?.signedUrl) {
+        setSideImageUrl(sideData.signedUrl);
+      }
+    } catch (error) {
+      console.error('Error loading existing photos:', error);
+    }
+  };
+
+  const uploadPhoto = async (file: File, type: "front" | "side") => {
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        toast.error("Please sign in to upload photos");
+        return null;
+      }
+
+      const userId = session.user.id;
+      const fileName = `${type}.jpg`;
+      const filePath = `${userId}/${fileName}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('avatars')
+        .upload(filePath, file, {
+          upsert: true,
+          contentType: 'image/jpeg'
+        });
+
+      if (uploadError) throw uploadError;
+
+      const { data } = await supabase.storage
+        .from('avatars')
+        .createSignedUrl(filePath, 3600);
+
+      return data?.signedUrl;
+    } catch (error) {
+      console.error(`Error uploading ${type} photo:`, error);
+      toast.error(`Failed to upload ${type} photo`);
+      return null;
+    }
+  };
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>, type: "front" | "side") => {
     const file = e.target.files?.[0];
     if (!file) return;
 
@@ -80,10 +145,22 @@ export const AvatarCustomization = () => {
       return;
     }
 
-    if (type === "front") {
-      setFrontImage(file);
-    } else {
-      setSideImage(file);
+    setLoading(true);
+    try {
+      const signedUrl = await uploadPhoto(file, type);
+      
+      if (signedUrl) {
+        if (type === "front") {
+          setFrontImage(file);
+          setFrontImageUrl(signedUrl);
+        } else {
+          setSideImage(file);
+          setSideImageUrl(signedUrl);
+        }
+        toast.success(`${type} photo uploaded successfully`);
+      }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -120,7 +197,7 @@ export const AvatarCustomization = () => {
       const { error } = await supabase
         .from('profiles')
         .update({
-          measurements: measurements,
+          measurements: measurements as unknown as Json,
           updated_at: new Date().toISOString(),
         })
         .eq('id', session.user.id);
@@ -179,12 +256,17 @@ export const AvatarCustomization = () => {
                     onChange={(e) => handleImageUpload(e, "front")}
                     className="hidden"
                     id="front-photo"
+                    disabled={loading}
                   />
                   <label
                     htmlFor="front-photo"
                     className="cursor-pointer flex flex-col items-center gap-2"
                   >
-                    <Upload className="w-8 h-8 text-gray-400" />
+                    {frontImageUrl ? (
+                      <img src={frontImageUrl} alt="Front view" className="w-32 h-32 object-cover rounded" />
+                    ) : (
+                      <Upload className="w-8 h-8 text-gray-400" />
+                    )}
                     <span className="text-sm text-gray-500">
                       {frontImage ? frontImage.name : "Upload front view"}
                     </span>
@@ -201,12 +283,17 @@ export const AvatarCustomization = () => {
                     onChange={(e) => handleImageUpload(e, "side")}
                     className="hidden"
                     id="side-photo"
+                    disabled={loading}
                   />
                   <label
                     htmlFor="side-photo"
                     className="cursor-pointer flex flex-col items-center gap-2"
                   >
-                    <Upload className="w-8 h-8 text-gray-400" />
+                    {sideImageUrl ? (
+                      <img src={sideImageUrl} alt="Side view" className="w-32 h-32 object-cover rounded" />
+                    ) : (
+                      <Upload className="w-8 h-8 text-gray-400" />
+                    )}
                     <span className="text-sm text-gray-500">
                       {sideImage ? sideImage.name : "Upload side view"}
                     </span>
@@ -217,9 +304,9 @@ export const AvatarCustomization = () => {
             <Button 
               className="w-full" 
               onClick={handleScanAvatar}
-              disabled={!frontImage || !sideImage}
+              disabled={!frontImage || !sideImage || loading}
             >
-              Scan Avatar
+              {loading ? "Processing..." : "Scan Avatar"}
             </Button>
           </TabsContent>
 
