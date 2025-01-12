@@ -20,22 +20,25 @@ export const DesignControls = ({
   const [features, setFeatures] = useState<string[]>([]);
 
   return (
-    <div className="space-y-8">
-      <div className="bg-white/10 backdrop-blur-md rounded-xl border border-white/20 shadow-xl p-8 transition-all duration-300 hover:shadow-2xl hover:bg-white/15">
+    <div className="space-y-6">
+      <div className="bg-white/10 backdrop-blur-sm rounded-xl border border-white/20 shadow-xl p-6 animate-fade-in">
         <AvatarCustomization />
       </div>
       
-      <div className="bg-white/10 backdrop-blur-md rounded-xl border border-white/20 shadow-xl p-8 transition-all duration-300 hover:shadow-2xl hover:bg-white/15">
+      <div className="bg-white/10 backdrop-blur-sm rounded-xl border border-white/20 shadow-xl p-6 animate-fade-in" style={{ animationDelay: "100ms" }}>
         <Drawer>
           <DrawerTrigger asChild>
-            <Button variant="outline" className="w-full gap-2 hover:bg-primary hover:text-white transition-colors border-white/20 backdrop-blur-sm">
+            <Button 
+              variant="outline" 
+              className="w-full gap-2 bg-white/5 border-white/20 text-white hover:bg-white/10 transition-all"
+            >
               <Settings className="w-4 h-4" />
               Advanced Settings
             </Button>
           </DrawerTrigger>
-          <DrawerContent>
+          <DrawerContent className="bg-gray-900/95 backdrop-blur-md border-t border-white/20">
             <DrawerHeader>
-              <DrawerTitle>Advanced Pattern Settings</DrawerTitle>
+              <DrawerTitle className="text-white">Advanced Pattern Settings</DrawerTitle>
             </DrawerHeader>
             <AdvancedSettingsContent
               fabricType={fabricType}
@@ -49,7 +52,7 @@ export const DesignControls = ({
         </Drawer>
       </div>
 
-      <div className="bg-white/10 backdrop-blur-md rounded-xl border border-white/20 shadow-xl p-8 transition-all duration-300 hover:shadow-2xl hover:bg-white/15">
+      <div className="bg-white/10 backdrop-blur-sm rounded-xl border border-white/20 shadow-xl p-6 animate-fade-in" style={{ animationDelay: "200ms" }}>
         <PatternChat 
           prompt={prompt}
           setPrompt={setPrompt}

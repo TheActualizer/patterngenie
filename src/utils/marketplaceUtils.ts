@@ -5,12 +5,9 @@ type Pattern = Database["public"]["Tables"]["patterns"]["Row"] & {
   profiles: { full_name: string | null } | null;
 };
 
-type PatternCategory = "dresses" | "tops" | "bottoms" | "outerwear" | "accessories" | "children" | "other";
-type DifficultyLevel = "beginner" | "intermediate" | "advanced";
-
 export async function loadMarketplacePatterns(
-  category: PatternCategory | "all",
-  difficulty: DifficultyLevel | "all",
+  category: string,
+  difficulty: string,
   sortBy: string
 ) {
   try {
@@ -20,10 +17,10 @@ export async function loadMarketplacePatterns(
       .eq('is_approved', true);
 
     if (category && category !== "all") {
-      query = query.eq('category', category as PatternCategory);
+      query = query.eq('category', category);
     }
     if (difficulty && difficulty !== "all") {
-      query = query.eq('difficulty', difficulty as DifficultyLevel);
+      query = query.eq('difficulty', difficulty);
     }
 
     switch (sortBy) {
