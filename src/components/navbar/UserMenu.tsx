@@ -78,7 +78,7 @@ export function UserMenu({ user }: UserMenuProps) {
           <FolderOpen className="mr-2 h-4 w-4" />
           My Projects
         </DropdownMenuItem>
-        <DropdownMenuItem className="cursor-pointer">
+        <DropdownMenuItem onClick={() => navigate('/account/settings')} className="cursor-pointer">
           <Settings className="mr-2 h-4 w-4" />
           Settings
         </DropdownMenuItem>
