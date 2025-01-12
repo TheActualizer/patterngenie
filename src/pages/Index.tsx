@@ -36,7 +36,7 @@ const Index = () => {
 
       if (error) {
         console.error("Subscription error:", error);
-        if (error.code === '23505') { // Unique violation error code
+        if (error.code === '23505') {
           toast.error("This email is already subscribed!");
         } else {
           toast.error("Failed to subscribe. Please try again.");
@@ -61,8 +61,8 @@ const Index = () => {
       <Hero />
       
       {/* About Section */}
-      <section className="py-20 bg-white">
-        <div className="container mx-auto px-4">
+      <section className="w-full py-20 bg-white">
+        <div className="container mx-auto px-4 md:px-6 lg:px-8 max-w-7xl">
           <h2 className="text-4xl font-display font-bold text-center mb-16">Why Choose PatternGenie?</h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             <Card className="bg-white/50 border-none shadow-lg hover:shadow-xl transition-shadow">
@@ -109,8 +109,8 @@ const Index = () => {
       </section>
 
       {/* Community Section */}
-      <section className="py-20 bg-purple-50">
-        <div className="container mx-auto px-4">
+      <section className="w-full py-20 bg-purple-50">
+        <div className="container mx-auto px-4 md:px-6 lg:px-8 max-w-7xl">
           <h2 className="text-4xl font-display font-bold text-center mb-4">Join Our Community</h2>
           <p className="text-xl text-gray-600 text-center mb-12 max-w-2xl mx-auto">
             Connect with thousands of passionate sewists and designers. Share your creations, get inspired, and learn from others.
@@ -145,8 +145,8 @@ const Index = () => {
       </section>
 
       {/* FAQ Section */}
-      <section className="py-20 bg-white">
-        <div className="container mx-auto px-4">
+      <section className="w-full py-20 bg-white">
+        <div className="container mx-auto px-4 md:px-6 lg:px-8 max-w-7xl">
           <h2 className="text-4xl font-display font-bold text-center mb-4">Frequently Asked Questions</h2>
           <p className="text-xl text-gray-600 text-center mb-12 max-w-2xl mx-auto">
             Find answers to common questions about PatternGenie
@@ -187,8 +187,8 @@ const Index = () => {
       </section>
 
       {/* Newsletter Section */}
-      <section className="py-20 bg-purple-50">
-        <div className="container mx-auto px-4">
+      <section className="w-full py-20 bg-purple-50">
+        <div className="container mx-auto px-4 md:px-6 lg:px-8 max-w-7xl">
           <div className="max-w-2xl mx-auto text-center">
             <div className="rounded-full bg-purple-100 w-12 h-12 flex items-center justify-center mb-4 mx-auto">
               <Mail className="w-6 h-6 text-purple-600" />
