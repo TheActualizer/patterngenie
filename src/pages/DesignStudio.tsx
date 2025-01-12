@@ -1,15 +1,12 @@
-import { Button } from "@/components/ui/button";
-import { Slider } from "@/components/ui/slider";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerTrigger } from "@/components/ui/drawer";
 import { useState, useEffect } from "react";
-import { Navbar } from "@/components/Navbar";
-import { supabase } from "@/integrations/supabase/client";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { toast } from "sonner";
-import { Save, Share2, Undo, Redo, Download } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { Navbar } from "@/components/Navbar";
 import { useDebounce } from "@/hooks/use-debounce";
+import { ProjectHeader } from "@/components/design-studio/ProjectHeader";
+import { DesignControls } from "@/components/design-studio/DesignControls";
+import { PatternPreview } from "@/components/design-studio/PatternPreview";
 
 interface PatternData {
   prompt: string;
@@ -20,7 +17,7 @@ interface PatternData {
   };
 }
 
-const DesignStudio = () => {
+export default function DesignStudio() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const projectId = searchParams.get("project");
@@ -152,7 +149,6 @@ const DesignStudio = () => {
         toast.success("Project saved successfully");
       }
       
-      // Update URL with project ID for new projects
       if (!projectId && result.data) {
         navigate(`/design-studio?project=${result.data.id}`, { replace: true });
       }
@@ -172,180 +168,37 @@ const DesignStudio = () => {
     toast.info("Sharing functionality coming soon!");
   };
 
+  useEffect(() => {
+    setProjectData({
+      prompt,
+      measurements,
+    });
+  }, [prompt, measurements]);
+
   return (
     <div className="min-h-screen bg-white">
       <Navbar />
       <div className="container mx-auto px-4 py-8">
-        <div className="flex justify-between items-center mb-6">
-          <div className="flex items-center gap-4">
-            <Input
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              className="text-xl font-semibold bg-transparent border-0 px-0 focus-visible:ring-0 w-[300px]"
-            />
-            <span className="text-sm text-muted-foreground">
-              {lastSaved ? `Last saved ${new Date(lastSaved).toLocaleTimeString()}` : "Not saved yet"}
-            </span>
-          </div>
-          <div className="flex items-center gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => toast.info("Undo functionality coming soon!")}
-            >
-              <Undo className="w-4 h-4" />
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => toast.info("Redo functionality coming soon!")}
-            >
-              <Redo className="w-4 h-4" />
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handleShare}
-            >
-              <Share2 className="w-4 h-4" />
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handleExport}
-            >
-              <Download className="w-4 h-4" />
-            </Button>
-            <Button
-              onClick={() => saveProject()}
-              disabled={isSaving}
-              className="gap-2"
-            >
-              <Save className="w-4 h-4" />
-              {isSaving ? "Saving..." : "Save"}
-            </Button>
-          </div>
-        </div>
+        <ProjectHeader
+          title={title}
+          setTitle={setTitle}
+          lastSaved={lastSaved}
+          isSaving={isSaving}
+          onSave={() => saveProject()}
+          onShare={handleShare}
+          onExport={handleExport}
+        />
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <div className="space-y-6 bg-gray-50 p-6 rounded-lg">
-            <div>
-              <h2 className="text-2xl font-display font-semibold mb-4">Design Studio</h2>
-              <div className="space-y-4">
-                <div>
-                  <Label htmlFor="prompt">Describe your design</Label>
-                  <Input
-                    id="prompt"
-                    placeholder="E.g., A-line dress with ruffled sleeves..."
-                    value={prompt}
-                    onChange={(e) => {
-                      setPrompt(e.target.value);
-                      setProjectData(prev => ({
-                        ...prev,
-                        prompt: e.target.value
-                      }));
-                    }}
-                  />
-                </div>
-                <Button className="w-full">Generate Pattern</Button>
-              </div>
-            </div>
-
-            <div className="space-y-4">
-              <h3 className="text-lg font-semibold">Measurements</h3>
-              <div className="space-y-6">
-                <div className="space-y-2">
-                  <Label>Bust: {measurements.bust}"</Label>
-                  <Slider
-                    value={[measurements.bust]}
-                    min={28}
-                    max={50}
-                    step={0.5}
-                    onValueChange={(value) => {
-                      const newMeasurements = { ...measurements, bust: value[0] };
-                      setMeasurements(newMeasurements);
-                      setProjectData(prev => ({
-                        ...prev,
-                        measurements: newMeasurements
-                      }));
-                    }}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label>Waist: {measurements.waist}"</Label>
-                  <Slider
-                    value={[measurements.waist]}
-                    min={22}
-                    max={44}
-                    step={0.5}
-                    onValueChange={(value) => {
-                      const newMeasurements = { ...measurements, waist: value[0] };
-                      setMeasurements(newMeasurements);
-                      setProjectData(prev => ({
-                        ...prev,
-                        measurements: newMeasurements
-                      }));
-                    }}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label>Hips: {measurements.hips}"</Label>
-                  <Slider
-                    value={[measurements.hips]}
-                    min={30}
-                    max={52}
-                    step={0.5}
-                    onValueChange={(value) => {
-                      const newMeasurements = { ...measurements, hips: value[0] };
-                      setMeasurements(newMeasurements);
-                      setProjectData(prev => ({
-                        ...prev,
-                        measurements: newMeasurements
-                      }));
-                    }}
-                  />
-                </div>
-              </div>
-            </div>
-
-            <Drawer>
-              <DrawerTrigger asChild>
-                <Button variant="outline" className="w-full">Advanced Settings</Button>
-              </DrawerTrigger>
-              <DrawerContent>
-                <DrawerHeader>
-                  <DrawerTitle>Advanced Pattern Settings</DrawerTitle>
-                </DrawerHeader>
-                <div className="p-4 space-y-4">
-                  <p className="text-muted-foreground">Advanced settings coming soon...</p>
-                </div>
-              </DrawerContent>
-            </Drawer>
-          </div>
-
-          <div className="bg-gray-50 p-6 rounded-lg flex items-center justify-center">
-            <div className="text-center space-y-4">
-              <div className="w-full aspect-square bg-white rounded-lg border-2 border-dashed border-gray-300 flex items-center justify-center">
-                <p className="text-gray-500">2D Pattern View</p>
-              </div>
-              <Button variant="secondary">Toggle 3D View</Button>
-            </div>
-          </div>
-
-          <div className="bg-gray-50 p-6 rounded-lg">
-            <h3 className="text-lg font-semibold mb-4">3D Preview</h3>
-            <div className="aspect-[3/4] bg-white rounded-lg border-2 border-dashed border-gray-300 flex items-center justify-center">
-              <p className="text-gray-500">3D Preview Coming Soon</p>
-            </div>
-            <div className="mt-4 space-y-2">
-              <Button className="w-full" variant="secondary">Customize Avatar</Button>
-              <Button className="w-full" variant="default" onClick={handleExport}>Export Pattern</Button>
-            </div>
-          </div>
+          <DesignControls
+            prompt={prompt}
+            setPrompt={setPrompt}
+            measurements={measurements}
+            setMeasurements={setMeasurements}
+          />
+          <PatternPreview onExport={handleExport} />
         </div>
       </div>
     </div>
   );
-};
-
-export default DesignStudio;
+}
