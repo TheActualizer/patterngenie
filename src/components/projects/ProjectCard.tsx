@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Loader2, Copy, Trash, MoreVertical } from "lucide-react";
+import { Loader2, Copy, Trash, MoreVertical, Download } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -63,6 +63,35 @@ export const ProjectCard = ({ project, onProjectDeleted, onProjectDuplicated }: 
     }
   };
 
+  const handleExportProject = () => {
+    try {
+      // Create a JSON blob with the project data
+      const projectData = {
+        title: project.title,
+        description: project.description,
+        pattern_data: project.pattern_data,
+        exported_at: new Date().toISOString(),
+      };
+
+      const blob = new Blob([JSON.stringify(projectData, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      
+      // Create a temporary link element and trigger the download
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `${project.title.toLowerCase().replace(/\s+/g, '-')}-export.json`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+
+      toast.success("Project exported successfully");
+    } catch (error) {
+      console.error('Error exporting project:', error);
+      toast.error("Failed to export project");
+    }
+  };
+
   return (
     <Card className="hover:shadow-lg transition-shadow">
       <CardHeader>
@@ -87,6 +116,13 @@ export const ProjectCard = ({ project, onProjectDeleted, onProjectDuplicated }: 
                 >
                   <Copy className="mr-2 h-4 w-4" />
                   Duplicate
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={handleExportProject}
+                  className="cursor-pointer"
+                >
+                  <Download className="mr-2 h-4 w-4" />
+                  Export
                 </DropdownMenuItem>
                 <AlertDialog>
                   <AlertDialogTrigger asChild>
