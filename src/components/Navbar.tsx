@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useToast } from "@/components/ui/use-toast";
-import { UserCircle2, FolderOpen, Menu, LogOut, Scissors } from "lucide-react";
+import { UserCircle2, FolderOpen, Menu, LogOut, Scissors, Settings } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { SettingsDialog } from "./settings/SettingsDialog";
 
@@ -108,7 +108,10 @@ export function Navbar() {
                     <FolderOpen className="mr-2 h-4 w-4" />
                     My Projects
                   </DropdownMenuItem>
-                  <SettingsDialog />
+                  <DropdownMenuItem className="cursor-pointer">
+                    <Settings className="mr-2 h-4 w-4" />
+                    Settings
+                  </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={handleSignOut} className="cursor-pointer text-red-600 focus:text-red-600">
                     <LogOut className="mr-2 h-4 w-4" />
@@ -157,7 +160,10 @@ export function Navbar() {
                           <FolderOpen className="mr-2 h-4 w-4" />
                           My Projects
                         </Button>
-                        <SettingsDialog />
+                        <Button variant="ghost" className="w-full justify-start">
+                          <Settings className="mr-2 h-4 w-4" />
+                          Settings
+                        </Button>
                         <Button variant="ghost" className="w-full justify-start text-red-600" onClick={handleSignOut}>
                           <LogOut className="mr-2 h-4 w-4" />
                           Sign out
