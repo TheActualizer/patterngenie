@@ -12,11 +12,6 @@ import { ChatBot } from "@/components/design-studio/ChatBot";
 
 interface PatternData {
   prompt: string;
-  measurements: {
-    bust: number;
-    waist: number;
-    hips: number;
-  };
 }
 
 export default function DesignStudio() {
@@ -25,22 +20,12 @@ export default function DesignStudio() {
   const projectId = searchParams.get("project");
   
   const [prompt, setPrompt] = useState("");
-  const [measurements, setMeasurements] = useState({
-    bust: 36,
-    waist: 28,
-    hips: 38,
-  });
   const [title, setTitle] = useState("Untitled Project");
   const [isSaving, setIsSaving] = useState(false);
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [projectData, setProjectData] = useState<PatternData>({
     prompt: "",
-    measurements: {
-      bust: 36,
-      waist: 28,
-      hips: 38,
-    },
   });
   
   const debouncedProjectData = useDebounce(projectData, 2000);
@@ -79,21 +64,10 @@ export default function DesignStudio() {
         console.log('Loading project data:', project);
         const patternData = project.pattern_data as { prompt?: string; measurements?: { bust: number; waist: number; hips: number; } };
         
-        // Update all state values with project data
         setTitle(project.title);
         setPrompt(patternData.prompt || "");
-        setMeasurements(patternData.measurements || {
-          bust: 36,
-          waist: 28,
-          hips: 38,
-        });
         setProjectData({
           prompt: patternData.prompt || "",
-          measurements: patternData.measurements || {
-            bust: 36,
-            waist: 28,
-            hips: 38,
-          }
         });
         setLastSaved(new Date(project.updated_at));
       }
@@ -122,7 +96,6 @@ export default function DesignStudio() {
         title,
         pattern_data: {
           prompt,
-          measurements,
         } as Json,
         user_id: userId,
         is_draft: true,
@@ -184,10 +157,9 @@ export default function DesignStudio() {
     if (!isLoading) {
       setProjectData({
         prompt,
-        measurements,
       });
     }
-  }, [prompt, measurements, isLoading]);
+  }, [prompt, isLoading]);
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -216,8 +188,6 @@ export default function DesignStudio() {
             <DesignControls
               prompt={prompt}
               setPrompt={setPrompt}
-              measurements={measurements}
-              setMeasurements={setMeasurements}
             />
           </div>
           <div className="lg:col-span-2">
