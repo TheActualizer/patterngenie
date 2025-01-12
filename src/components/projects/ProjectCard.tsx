@@ -65,7 +65,6 @@ export const ProjectCard = ({ project, onProjectDeleted, onProjectDuplicated }: 
 
   const handleExportProject = () => {
     try {
-      // Create a JSON blob with the project data
       const projectData = {
         title: project.title,
         description: project.description,
@@ -76,7 +75,6 @@ export const ProjectCard = ({ project, onProjectDeleted, onProjectDuplicated }: 
       const blob = new Blob([JSON.stringify(projectData, null, 2)], { type: 'application/json' });
       const url = URL.createObjectURL(blob);
       
-      // Create a temporary link element and trigger the download
       const link = document.createElement('a');
       link.href = url;
       link.download = `${project.title.toLowerCase().replace(/\s+/g, '-')}-export.json`;
