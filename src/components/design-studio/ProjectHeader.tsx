@@ -3,6 +3,14 @@ import { Input } from "@/components/ui/input";
 import { Save, Share2, Undo, Redo, Download, Plus } from "lucide-react";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 interface ProjectHeaderProps {
   title: string;
@@ -24,6 +32,28 @@ export const ProjectHeader = ({
   onExport,
 }: ProjectHeaderProps) => {
   const navigate = useNavigate();
+  const currentUrl = window.location.href;
+
+  const handleCopyLink = async () => {
+    try {
+      await navigator.clipboard.writeText(currentUrl);
+      toast.success("Link copied to clipboard!");
+    } catch (err) {
+      console.error("Failed to copy link:", err);
+      toast.error("Failed to copy link");
+    }
+  };
+
+  const handleShareOnTwitter = () => {
+    const text = encodeURIComponent(`Check out my pattern design "${title}" on Lovable!`);
+    const url = encodeURIComponent(currentUrl);
+    window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`, '_blank');
+  };
+
+  const handleShareOnFacebook = () => {
+    const url = encodeURIComponent(currentUrl);
+    window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank');
+  };
 
   return (
     <div className="space-y-6">
@@ -55,14 +85,55 @@ export const ProjectHeader = ({
             >
               <Redo className="w-4 h-4" />
             </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={onShare}
-              className="text-gray-500 hover:text-gray-700"
-            >
-              <Share2 className="w-4 h-4" />
-            </Button>
+            
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-gray-500 hover:text-gray-700"
+                >
+                  <Share2 className="w-4 h-4" />
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Share Pattern</DialogTitle>
+                  <DialogDescription>
+                    Share your pattern design with others
+                  </DialogDescription>
+                </DialogHeader>
+                <div className="space-y-4">
+                  <div className="flex items-center gap-2">
+                    <Input
+                      readOnly
+                      value={currentUrl}
+                      className="flex-1"
+                    />
+                    <Button onClick={handleCopyLink} variant="secondary">
+                      Copy Link
+                    </Button>
+                  </div>
+                  <div className="flex gap-2">
+                    <Button
+                      onClick={handleShareOnTwitter}
+                      variant="outline"
+                      className="flex-1"
+                    >
+                      Share on Twitter
+                    </Button>
+                    <Button
+                      onClick={handleShareOnFacebook}
+                      variant="outline"
+                      className="flex-1"
+                    >
+                      Share on Facebook
+                    </Button>
+                  </div>
+                </div>
+              </DialogContent>
+            </Dialog>
+
             <Button
               variant="ghost"
               size="sm"
