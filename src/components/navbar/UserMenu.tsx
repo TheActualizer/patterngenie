@@ -12,7 +12,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { UserCircle2, FolderOpen, LogOut, Settings } from "lucide-react";
+import { UserCircle2, PlusCircle, FolderOpen, Settings, LogOut } from "lucide-react";
 
 interface UserMenuProps {
   user: User | null;
@@ -67,8 +67,13 @@ export function UserMenu({ user }: UserMenuProps) {
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={() => navigate('/account')} className="cursor-pointer">
           <UserCircle2 className="mr-2 h-4 w-4" />
-          Account Overview
+          Personal Info
         </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => navigate('/design-studio')} className="cursor-pointer">
+          <PlusCircle className="mr-2 h-4 w-4" />
+          Create Pattern
+        </DropdownMenuItem>
+        <DropdownMenuSeparator />
         <DropdownMenuItem onClick={() => navigate('/account/projects')} className="cursor-pointer">
           <FolderOpen className="mr-2 h-4 w-4" />
           My Projects

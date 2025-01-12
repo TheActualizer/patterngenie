@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Menu, UserCircle2, FolderOpen, Settings, LogOut } from "lucide-react";
+import { Menu, UserCircle2, PlusCircle, FolderOpen, Settings, LogOut } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { User } from "@supabase/supabase-js";
 import { NavLinks } from "./NavLinks";
@@ -39,8 +39,13 @@ export function MobileMenu({ user, onSignOut }: MobileMenuProps) {
               <div className="space-y-2">
                 <Button variant="ghost" className="w-full justify-start" onClick={() => navigate('/account')}>
                   <UserCircle2 className="mr-2 h-4 w-4" />
-                  Account Overview
+                  Personal Info
                 </Button>
+                <Button variant="ghost" className="w-full justify-start" onClick={() => navigate('/design-studio')}>
+                  <PlusCircle className="mr-2 h-4 w-4" />
+                  Create Pattern
+                </Button>
+                <div className="my-2 border-t border-gray-100" />
                 <Button variant="ghost" className="w-full justify-start" onClick={() => navigate('/account/projects')}>
                   <FolderOpen className="mr-2 h-4 w-4" />
                   My Projects
@@ -49,6 +54,7 @@ export function MobileMenu({ user, onSignOut }: MobileMenuProps) {
                   <Settings className="mr-2 h-4 w-4" />
                   Settings
                 </Button>
+                <div className="my-2 border-t border-gray-100" />
                 <Button variant="ghost" className="w-full justify-start text-red-600" onClick={onSignOut}>
                   <LogOut className="mr-2 h-4 w-4" />
                   Sign out
