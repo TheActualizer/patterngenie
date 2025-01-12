@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerTrigger } from "@/components/ui/drawer";
 import { useState } from "react";
+import { Navbar } from "@/components/Navbar";
 
 const DesignStudio = () => {
   const [prompt, setPrompt] = useState("");
@@ -15,6 +16,7 @@ const DesignStudio = () => {
 
   return (
     <div className="min-h-screen bg-white">
+      <Navbar />
       <div className="container mx-auto px-4 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Left Panel - Controls */}
