@@ -20,7 +20,7 @@ export const DesignControls = ({
   const [features, setFeatures] = useState<string[]>([]);
 
   return (
-    <div className="bg-white/50 backdrop-blur-sm rounded-xl shadow-sm border border-gray-100/50 p-6 space-y-6">
+    <div className="w-full bg-white/50 backdrop-blur-sm rounded-xl shadow-sm border border-gray-100/50 p-4 md:p-6 space-y-6">
       <AvatarCustomization />
       
       <Drawer>

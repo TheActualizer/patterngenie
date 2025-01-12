@@ -30,21 +30,18 @@ export const PatternPreview = ({ onExport }: PatternPreviewProps) => {
     try {
       setIsProcessing(true);
       
-      // Get current user session
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) {
         toast.error("Please sign in to export patterns");
         return;
       }
 
-      // Create checkout session
       const { data, error } = await supabase.functions.invoke('create-pattern-checkout', {
-        body: { patternId: 'your-pattern-id' }, // You'll need to pass the actual pattern ID here
+        body: { patternId: 'your-pattern-id' },
       });
 
       if (error) throw error;
 
-      // Redirect to Stripe Checkout
       if (data?.url) {
         window.location.href = data.url;
       }
@@ -59,8 +56,8 @@ export const PatternPreview = ({ onExport }: PatternPreviewProps) => {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-6">
+    <div className="w-full space-y-6">
+      <div className="w-full bg-white rounded-lg shadow-sm border border-gray-100 p-4 md:p-6">
         <h3 className="text-lg font-semibold mb-4 text-gray-900">3D Preview</h3>
         <div className="aspect-[3/4] bg-gray-50 rounded-lg border-2 border-dashed border-gray-200 flex items-center justify-center mb-4 transition-colors hover:bg-gray-100/50">
           <p className="text-gray-500 font-medium">3D Preview Coming Soon</p>
@@ -68,7 +65,7 @@ export const PatternPreview = ({ onExport }: PatternPreviewProps) => {
         <Button variant="outline" className="w-full">Toggle View Mode</Button>
       </div>
 
-      <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-6">
+      <div className="w-full bg-white rounded-lg shadow-sm border border-gray-100 p-4 md:p-6">
         <div className="text-center space-y-4">
           <div className="w-full aspect-square bg-gray-50 rounded-lg border-2 border-dashed border-gray-200 flex items-center justify-center transition-colors hover:bg-gray-100/50">
             <p className="text-gray-500 font-medium">2D Pattern View</p>
