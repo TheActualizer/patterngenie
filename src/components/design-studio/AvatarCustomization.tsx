@@ -67,8 +67,22 @@ export const AvatarCustomization = () => {
       if (error) throw error;
 
       if (data?.measurements) {
+        // Ensure type safety by explicitly mapping the measurements
         const measurementsData = data.measurements as Record<string, string | null>;
-        setMeasurements(measurementsData as Measurements);
+        const typedMeasurements: Measurements = {
+          bust: measurementsData.bust || null,
+          waist: measurementsData.waist || null,
+          hips: measurementsData.hips || null,
+          shoulder: measurementsData.shoulder || null,
+          arm_length: measurementsData.arm_length || null,
+          inseam: measurementsData.inseam || null,
+          neck: measurementsData.neck || null,
+          chest: measurementsData.chest || null,
+          back_width: measurementsData.back_width || null,
+          front_length: measurementsData.front_length || null,
+          sleeve_length: measurementsData.sleeve_length || null,
+        };
+        setMeasurements(typedMeasurements);
       }
       
       if (data?.avatar_front_url) {
