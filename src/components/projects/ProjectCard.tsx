@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Loader2, Copy, Trash, MoreVertical, Download } from "lucide-react";
+import { Loader2, Download, Trash, MoreVertical } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -93,72 +93,63 @@ export const ProjectCard = ({ project, onProjectDeleted, onProjectDuplicated }: 
   return (
     <Card className="hover:shadow-lg transition-shadow">
       <CardHeader>
-        <CardTitle className="flex items-center justify-between">
-          <span className="truncate">{project.title || 'Untitled Project'}</span>
+        <div className="flex items-center justify-between">
+          <CardTitle className="text-lg font-semibold truncate">
+            {project.title || 'Untitled Project'}
+          </CardTitle>
           <div className="flex items-center gap-2">
             {project.is_draft && (
               <span className="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded">
                 Draft
               </span>
             )}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                  <MoreVertical className="h-4 w-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem
-                  onClick={() => onProjectDuplicated(project)}
-                  className="cursor-pointer"
-                >
-                  <Copy className="mr-2 h-4 w-4" />
-                  Duplicate
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={handleExportProject}
-                  className="cursor-pointer"
-                >
-                  <Download className="mr-2 h-4 w-4" />
-                  Export
-                </DropdownMenuItem>
-                <AlertDialog>
-                  <AlertDialogTrigger asChild>
-                    <DropdownMenuItem
-                      onSelect={(e) => e.preventDefault()}
-                      className="cursor-pointer text-destructive"
+            <div className="flex gap-2">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleExportProject}
+                className="h-8 w-8 p-0"
+              >
+                <Download className="h-4 w-4" />
+                <span className="sr-only">Export project</span>
+              </Button>
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-8 w-8 p-0 text-destructive hover:text-destructive"
+                  >
+                    <Trash className="h-4 w-4" />
+                    <span className="sr-only">Delete project</span>
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Delete project?</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      This action cannot be undone. This will permanently delete your
+                      project and remove all of its data.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction
+                      onClick={handleDeleteProject}
+                      className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                     >
-                      <Trash className="mr-2 h-4 w-4" />
-                      Delete
-                    </DropdownMenuItem>
-                  </AlertDialogTrigger>
-                  <AlertDialogContent>
-                    <AlertDialogHeader>
-                      <AlertDialogTitle>Delete project?</AlertDialogTitle>
-                      <AlertDialogDescription>
-                        This action cannot be undone. This will permanently delete your
-                        project and remove all of its data.
-                      </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                      <AlertDialogCancel>Cancel</AlertDialogCancel>
-                      <AlertDialogAction
-                        onClick={handleDeleteProject}
-                        className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                      >
-                        {deletingProject ? (
-                          <Loader2 className="h-4 w-4 animate-spin" />
-                        ) : (
-                          "Delete"
-                        )}
-                      </AlertDialogAction>
-                    </AlertDialogFooter>
-                  </AlertDialogContent>
-                </AlertDialog>
-              </DropdownMenuContent>
-            </DropdownMenu>
+                      {deletingProject ? (
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                      ) : (
+                        "Delete"
+                      )}
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            </div>
           </div>
-        </CardTitle>
+        </div>
       </CardHeader>
       <CardContent>
         <p className="text-sm text-muted-foreground line-clamp-2">
