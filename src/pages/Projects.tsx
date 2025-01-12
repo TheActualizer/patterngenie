@@ -29,6 +29,7 @@ export default function Projects() {
 
   async function getProjects() {
     try {
+      console.log('Fetching projects...');
       const { data: { session } } = await supabase.auth.getSession();
       
       if (!session) {
@@ -36,13 +37,19 @@ export default function Projects() {
         return;
       }
 
+      console.log('User ID:', session.user.id);
       const { data, error } = await supabase
         .from('projects')
         .select('*')
+        .eq('user_id', session.user.id)
         .order('updated_at', { ascending: false });
 
-      if (error) throw error;
+      if (error) {
+        console.error('Error fetching projects:', error);
+        throw error;
+      }
       
+      console.log('Fetched projects:', data);
       if (data) {
         setProjects(data);
       }
@@ -98,7 +105,7 @@ export default function Projects() {
               <Card key={project.id} className="hover:shadow-lg transition-shadow">
                 <CardHeader>
                   <CardTitle className="flex items-center justify-between">
-                    <span className="truncate">{project.title}</span>
+                    <span className="truncate">{project.title || 'Untitled Project'}</span>
                     {project.is_draft && (
                       <span className="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded">
                         Draft
