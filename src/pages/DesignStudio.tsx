@@ -66,13 +66,13 @@ export default function DesignStudio() {
         .from('projects')
         .select('*')
         .eq('id', projectId)
-        .single();
+        .maybeSingle();
 
       if (error) throw error;
 
       if (project) {
         setTitle(project.title);
-        const patternData = project.pattern_data as unknown as PatternData;
+        const patternData = project.pattern_data as PatternData;
         setPrompt(patternData.prompt || "");
         setMeasurements(patternData.measurements || {
           bust: 36,
@@ -108,41 +108,33 @@ export default function DesignStudio() {
         pattern_data: currentPatternData,
         user_id: session.session.user.id,
         is_draft: true,
-        updated_at: new Date().toISOString()
       };
-
-      console.log('Saving project with data:', projectPayload);
 
       let result;
       
       if (projectId) {
-        result = await supabase
+        const { data, error } = await supabase
           .from('projects')
-          .update({
-            title: projectPayload.title,
-            pattern_data: projectPayload.pattern_data,
-            is_draft: projectPayload.is_draft,
-            updated_at: projectPayload.updated_at
-          })
+          .update(projectPayload)
           .eq('id', projectId)
           .select()
           .single();
+          
+        if (error) throw error;
+        result = { data, error };
       } else {
-        result = await supabase
+        const { data, error } = await supabase
           .from('projects')
-          .insert([{
-            title: projectPayload.title,
-            pattern_data: projectPayload.pattern_data,
-            user_id: projectPayload.user_id,
-            is_draft: projectPayload.is_draft
-          }])
+          .insert([projectPayload])
           .select()
           .single();
+          
+        if (error) throw error;
+        result = { data, error };
       }
 
       if (result.error) throw result.error;
 
-      console.log('Project saved successfully:', result.data);
       setLastSaved(new Date());
       
       if (!isAutoSave) {
@@ -196,7 +188,9 @@ export default function DesignStudio() {
             measurements={measurements}
             setMeasurements={setMeasurements}
           />
-          <PatternPreview onExport={handleExport} />
+          <div className="lg:col-span-2 space-y-8">
+            <PatternPreview onExport={handleExport} />
+          </div>
         </div>
       </div>
     </div>

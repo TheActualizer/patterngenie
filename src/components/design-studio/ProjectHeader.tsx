@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Save, Share2, Undo, Redo, Download } from "lucide-react";
+import { toast } from "sonner";
 
 interface ProjectHeaderProps {
   title: string;
@@ -30,7 +31,7 @@ export const ProjectHeader = ({
           className="text-xl font-semibold bg-transparent border-0 px-0 focus-visible:ring-0 w-[300px]"
         />
         <span className="text-sm text-muted-foreground">
-          {lastSaved ? `Last saved ${new Date(lastSaved).toLocaleTimeString()}` : "Not saved yet"}
+          {lastSaved ? `Last saved ${lastSaved.toLocaleTimeString()}` : "Not saved yet"}
         </span>
       </div>
       <div className="flex items-center gap-2">
