@@ -1,11 +1,10 @@
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerTrigger } from "@/components/ui/drawer";
 import { Settings } from "lucide-react";
 import { AdvancedSettingsContent } from "./AdvancedSettingsContent";
 import { useState } from "react";
 import { AvatarCustomization } from "./AvatarCustomization";
+import { PatternChat } from "./PatternChat";
 
 interface DesignControlsProps {
   prompt: string;
@@ -46,19 +45,12 @@ export const DesignControls = ({
         </DrawerContent>
       </Drawer>
 
-      <div className="space-y-4">
-        <div className="space-y-2">
-          <Label htmlFor="prompt" className="text-sm font-medium text-gray-700">Describe your design</Label>
-          <Input
-            id="prompt"
-            placeholder="E.g., A-line dress with ruffled sleeves..."
-            value={prompt}
-            onChange={(e) => setPrompt(e.target.value)}
-            className="w-full"
-          />
-        </div>
-        <Button className="w-full bg-primary hover:bg-primary/90">Generate Pattern</Button>
-      </div>
+      <PatternChat 
+        prompt={prompt}
+        setPrompt={setPrompt}
+        fabricType={fabricType}
+        designStyle={designStyle}
+      />
     </div>
   );
 };
