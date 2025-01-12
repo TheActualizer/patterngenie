@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useEffect, useState } from "react";
 import { User } from "@supabase/supabase-js";
@@ -13,10 +13,12 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useToast } from "@/components/ui/use-toast";
+import { UserCircle2, Settings, FolderOpen } from "lucide-react";
 
 export function Navbar() {
   const [user, setUser] = useState<User | null>(null);
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Get initial session
@@ -40,6 +42,8 @@ export function Navbar() {
         title: "Error signing out",
         description: error.message,
       });
+    } else {
+      navigate('/');
     }
   };
 
@@ -53,7 +57,7 @@ export function Navbar() {
           <Link to="/marketplace">
             <Button variant="ghost">Marketplace</Button>
           </Link>
-          <Link to="/studio">
+          <Link to="/design-studio">
             <Button variant="ghost">Design Studio</Button>
           </Link>
           
@@ -74,6 +78,19 @@ export function Navbar() {
                     <p className="text-xs leading-none text-muted-foreground">{user.email}</p>
                   </div>
                 </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={() => navigate('/account')}>
+                  <UserCircle2 className="mr-2 h-4 w-4" />
+                  Account Overview
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => navigate('/account/projects')}>
+                  <FolderOpen className="mr-2 h-4 w-4" />
+                  My Projects
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => navigate('/account/settings')}>
+                  <Settings className="mr-2 h-4 w-4" />
+                  Settings
+                </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={handleSignOut}>
                   Sign out
