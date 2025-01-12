@@ -5,12 +5,6 @@ import { Menu, UserCircle2, PlusCircle, FolderOpen, Settings, LogOut } from "luc
 import { Link, useNavigate } from "react-router-dom";
 import { User } from "@supabase/supabase-js";
 import { NavLinks } from "./NavLinks";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
-import { ChevronDown } from "lucide-react";
 
 interface MobileMenuProps {
   user: User | null;
@@ -43,27 +37,10 @@ export function MobileMenu({ user, onSignOut }: MobileMenuProps) {
                 </div>
               </div>
               <div className="space-y-2">
-                <Collapsible>
-                  <CollapsibleTrigger asChild>
-                    <Button variant="ghost" className="w-full justify-between">
-                      <div className="flex items-center">
-                        <UserCircle2 className="mr-2 h-4 w-4" />
-                        Personal Info
-                      </div>
-                      <ChevronDown className="h-4 w-4" />
-                    </Button>
-                  </CollapsibleTrigger>
-                  <CollapsibleContent className="space-y-2 px-6 py-2">
-                    <Button variant="ghost" className="w-full justify-start" onClick={() => navigate('/account')}>
-                      <UserCircle2 className="mr-2 h-4 w-4" />
-                      Profile
-                    </Button>
-                    <Button variant="ghost" className="w-full justify-start" onClick={() => navigate('/account/settings')}>
-                      <Settings className="mr-2 h-4 w-4" />
-                      Settings
-                    </Button>
-                  </CollapsibleContent>
-                </Collapsible>
+                <Button variant="ghost" className="w-full justify-start" onClick={() => navigate('/account')}>
+                  <UserCircle2 className="mr-2 h-4 w-4" />
+                  Personal Info
+                </Button>
                 <Button variant="ghost" className="w-full justify-start" onClick={() => navigate('/design-studio')}>
                   <PlusCircle className="mr-2 h-4 w-4" />
                   Create Pattern
@@ -72,6 +49,10 @@ export function MobileMenu({ user, onSignOut }: MobileMenuProps) {
                 <Button variant="ghost" className="w-full justify-start" onClick={() => navigate('/account/projects')}>
                   <FolderOpen className="mr-2 h-4 w-4" />
                   My Projects
+                </Button>
+                <Button variant="ghost" className="w-full justify-start" onClick={() => navigate('/account/settings')}>
+                  <Settings className="mr-2 h-4 w-4" />
+                  Settings
                 </Button>
                 <div className="my-2 border-t border-gray-100" />
                 <Button variant="ghost" className="w-full justify-start text-red-600" onClick={onSignOut}>

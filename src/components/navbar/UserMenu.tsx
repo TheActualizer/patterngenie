@@ -10,13 +10,9 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-  DropdownMenuGroup,
-  DropdownMenuSub,
-  DropdownMenuSubTrigger,
-  DropdownMenuSubContent,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { UserCircle2, PlusCircle, FolderOpen, Settings, LogOut, User as UserIcon } from "lucide-react";
+import { UserCircle2, PlusCircle, FolderOpen, Settings, LogOut } from "lucide-react";
 
 interface UserMenuProps {
   user: User | null;
@@ -69,24 +65,10 @@ export function UserMenu({ user }: UserMenuProps) {
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuGroup>
-          <DropdownMenuSub>
-            <DropdownMenuSubTrigger>
-              <UserIcon className="mr-2 h-4 w-4" />
-              Personal Info
-            </DropdownMenuSubTrigger>
-            <DropdownMenuSubContent>
-              <DropdownMenuItem onClick={() => navigate('/account')}>
-                <UserCircle2 className="mr-2 h-4 w-4" />
-                Profile
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => navigate('/account/settings')}>
-                <Settings className="mr-2 h-4 w-4" />
-                Settings
-              </DropdownMenuItem>
-            </DropdownMenuSubContent>
-          </DropdownMenuSub>
-        </DropdownMenuGroup>
+        <DropdownMenuItem onClick={() => navigate('/account')} className="cursor-pointer">
+          <UserCircle2 className="mr-2 h-4 w-4" />
+          Personal Info
+        </DropdownMenuItem>
         <DropdownMenuItem onClick={() => navigate('/design-studio')} className="cursor-pointer">
           <PlusCircle className="mr-2 h-4 w-4" />
           Create Pattern
@@ -95,6 +77,10 @@ export function UserMenu({ user }: UserMenuProps) {
         <DropdownMenuItem onClick={() => navigate('/account/projects')} className="cursor-pointer">
           <FolderOpen className="mr-2 h-4 w-4" />
           My Projects
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => navigate('/account/settings')} className="cursor-pointer">
+          <Settings className="mr-2 h-4 w-4" />
+          Settings
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={handleSignOut} className="cursor-pointer text-red-600 focus:text-red-600">
