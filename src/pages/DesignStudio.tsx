@@ -72,7 +72,6 @@ export default function DesignStudio() {
 
       if (project) {
         setTitle(project.title);
-        // Safely cast the pattern_data to PatternData with type checking
         const patternData = project.pattern_data as { prompt?: string; measurements?: { bust: number; waist: number; hips: number; } };
         setPrompt(patternData.prompt || "");
         setMeasurements(patternData.measurements || {
@@ -106,14 +105,28 @@ export default function DesignStudio() {
         return;
       }
 
-      const currentPatternData: PatternData = {
-        prompt,
-        measurements,
-      };
+      // First, ensure a profile exists for the user
+      const { data: profile, error: profileError } = await supabase
+        .from('profiles')
+        .select('id')
+        .eq('id', session.session.user.id)
+        .single();
+
+      if (profileError) {
+        // Create profile if it doesn't exist
+        const { error: insertError } = await supabase
+          .from('profiles')
+          .insert([{ id: session.session.user.id }]);
+
+        if (insertError) throw insertError;
+      }
 
       const projectPayload = {
         title,
-        pattern_data: currentPatternData,
+        pattern_data: {
+          prompt,
+          measurements,
+        } as unknown as Json,
         user_id: session.session.user.id,
         is_draft: true,
       };
