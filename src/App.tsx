@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import DesignStudio from "./pages/DesignStudio";
+import Marketplace from "./pages/Marketplace";
 
 const queryClient = new QueryClient();
 
@@ -17,7 +18,8 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/studio" element={<DesignStudio />} />
-          <Route path="/design-studio" element={<DesignStudio />} /> {/* Keep this for backward compatibility */}
+          <Route path="/design-studio" element={<DesignStudio />} />
+          <Route path="/marketplace" element={<Marketplace />} />
         </Routes>
       </BrowserRouter>
     </TooltipProvider>
