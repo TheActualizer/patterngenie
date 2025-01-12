@@ -5,7 +5,7 @@ import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerTrigger } from 
 import { Settings } from "lucide-react";
 import { AdvancedSettingsContent } from "./AdvancedSettingsContent";
 import { useState } from "react";
-import { toast } from "sonner";
+import { AvatarCustomization } from "./AvatarCustomization";
 
 interface DesignControlsProps {
   prompt: string;
@@ -21,21 +21,9 @@ export const DesignControls = ({
   const [features, setFeatures] = useState<string[]>([]);
 
   return (
-    <div className="bg-white/50 backdrop-blur-sm rounded-xl shadow-sm border border-gray-100/50 p-6 space-y-8">
-      <div className="space-y-4">
-        <div className="space-y-2">
-          <Label htmlFor="prompt" className="text-sm font-medium text-gray-700">Describe your design</Label>
-          <Input
-            id="prompt"
-            placeholder="E.g., A-line dress with ruffled sleeves..."
-            value={prompt}
-            onChange={(e) => setPrompt(e.target.value)}
-            className="w-full"
-          />
-        </div>
-        <Button className="w-full bg-primary hover:bg-primary/90">Generate Pattern</Button>
-      </div>
-
+    <div className="bg-white/50 backdrop-blur-sm rounded-xl shadow-sm border border-gray-100/50 p-6 space-y-6">
+      <AvatarCustomization />
+      
       <Drawer>
         <DrawerTrigger asChild>
           <Button variant="outline" className="w-full gap-2 hover:bg-primary hover:text-white transition-colors">
@@ -57,6 +45,20 @@ export const DesignControls = ({
           />
         </DrawerContent>
       </Drawer>
+
+      <div className="space-y-4">
+        <div className="space-y-2">
+          <Label htmlFor="prompt" className="text-sm font-medium text-gray-700">Describe your design</Label>
+          <Input
+            id="prompt"
+            placeholder="E.g., A-line dress with ruffled sleeves..."
+            value={prompt}
+            onChange={(e) => setPrompt(e.target.value)}
+            className="w-full"
+          />
+        </div>
+        <Button className="w-full bg-primary hover:bg-primary/90">Generate Pattern</Button>
+      </div>
     </div>
   );
 };
