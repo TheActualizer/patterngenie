@@ -3,7 +3,22 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent } from "@/components/ui/card";
 import { toast } from "sonner";
-import { MeasurementsForm, Measurements } from "./measurements/MeasurementsForm";
+import { MeasurementsForm } from "./measurements/MeasurementsForm";
+import { Json } from "@/integrations/supabase/types";
+
+export interface Measurements {
+  bust: string | null;
+  waist: string | null;
+  hips: string | null;
+  shoulder: string | null;
+  arm_length: string | null;
+  inseam: string | null;
+  neck: string | null;
+  chest: string | null;
+  back_width: string | null;
+  front_length: string | null;
+  sleeve_length: string | null;
+}
 
 export function MeasurementsSettings() {
   const navigate = useNavigate();
@@ -48,7 +63,7 @@ export function MeasurementsSettings() {
       }
 
       if (data?.measurements) {
-        setMeasurements(data.measurements as Measurements);
+        setMeasurements(data.measurements as unknown as Measurements);
       }
     } catch (error) {
       console.error('Error:', error);
@@ -69,7 +84,7 @@ export function MeasurementsSettings() {
       const { error } = await supabase
         .from('profiles')
         .update({
-          measurements,
+          measurements: measurements as unknown as Json,
           updated_at: new Date().toISOString(),
         })
         .eq('id', session.user.id);

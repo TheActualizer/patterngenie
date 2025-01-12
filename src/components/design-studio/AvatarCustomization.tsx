@@ -9,33 +9,34 @@ import { useState, useEffect } from "react";
 import { Upload } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { Json } from "@/integrations/supabase/types";
 
 interface Measurements {
-  bust: string;
-  waist: string;
-  hips: string;
-  shoulder: string;
-  arm_length: string;
-  inseam: string;
-  neck: string;
-  chest: string;
-  back_width: string;
-  front_length: string;
-  sleeve_length: string;
+  bust: string | null;
+  waist: string | null;
+  hips: string | null;
+  shoulder: string | null;
+  arm_length: string | null;
+  inseam: string | null;
+  neck: string | null;
+  chest: string | null;
+  back_width: string | null;
+  front_length: string | null;
+  sleeve_length: string | null;
 }
 
 const defaultMeasurements: Measurements = {
-  bust: "",
-  waist: "",
-  hips: "",
-  shoulder: "",
-  arm_length: "",
-  inseam: "",
-  neck: "",
-  chest: "",
-  back_width: "",
-  front_length: "",
-  sleeve_length: "",
+  bust: null,
+  waist: null,
+  hips: null,
+  shoulder: null,
+  arm_length: null,
+  inseam: null,
+  neck: null,
+  chest: null,
+  back_width: null,
+  front_length: null,
+  sleeve_length: null,
 };
 
 export const AvatarCustomization = () => {
@@ -67,7 +68,7 @@ export const AvatarCustomization = () => {
       if (error) throw error;
 
       if (data?.measurements) {
-        setMeasurements(data.measurements as Measurements);
+        setMeasurements(data.measurements as unknown as Measurements);
       }
     } catch (error) {
       console.error('Error loading measurements:', error);
