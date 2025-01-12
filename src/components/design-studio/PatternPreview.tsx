@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/select";
 import { useState } from "react";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 
 interface PatternPreviewProps {
   onExport: () => void;
@@ -23,11 +24,38 @@ interface PatternPreviewProps {
 export const PatternPreview = ({ onExport }: PatternPreviewProps) => {
   const [selectedFormat, setSelectedFormat] = useState<string>("pdf");
   const [showExportDialog, setShowExportDialog] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
 
-  const handleExport = () => {
-    toast.info(`Exporting pattern in ${selectedFormat.toUpperCase()} format...`);
-    onExport();
-    setShowExportDialog(false);
+  const handleExport = async () => {
+    try {
+      setIsProcessing(true);
+      
+      // Get current user session
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        toast.error("Please sign in to export patterns");
+        return;
+      }
+
+      // Create checkout session
+      const { data, error } = await supabase.functions.invoke('create-pattern-checkout', {
+        body: { patternId: 'your-pattern-id' }, // You'll need to pass the actual pattern ID here
+      });
+
+      if (error) throw error;
+
+      // Redirect to Stripe Checkout
+      if (data?.url) {
+        window.location.href = data.url;
+      }
+
+    } catch (error) {
+      console.error('Export error:', error);
+      toast.error("Failed to process export");
+    } finally {
+      setIsProcessing(false);
+      setShowExportDialog(false);
+    }
   };
 
   return (
@@ -80,8 +108,12 @@ export const PatternPreview = ({ onExport }: PatternPreviewProps) => {
                 {selectedFormat === "svg" && "Ideal for digital editing and scaling"}
               </p>
             </div>
-            <Button onClick={handleExport} className="w-full">
-              Export as {selectedFormat.toUpperCase()}
+            <Button 
+              onClick={handleExport} 
+              className="w-full"
+              disabled={isProcessing}
+            >
+              {isProcessing ? "Processing..." : `Export as ${selectedFormat.toUpperCase()}`}
             </Button>
           </div>
         </DialogContent>
