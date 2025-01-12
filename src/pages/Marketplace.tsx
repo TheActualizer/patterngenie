@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Navbar } from "@/components/Navbar";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, Star, DollarSign, Eye, Download } from "lucide-react";
+import { Loader2, Star, DollarSign, Eye, Download, Plus } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -34,8 +34,10 @@ export default function Marketplace() {
   const [category, setCategory] = useState<PatternCategory | "all">("all");
   const [difficulty, setDifficulty] = useState<DifficultyLevel | "all">("all");
   const [sortBy, setSortBy] = useState<string>("newest");
+  const [userRole, setUserRole] = useState<string | null>(null);
 
   useEffect(() => {
+    checkUserRole();
     loadPatterns();
     
     // Check for payment status
@@ -54,6 +56,25 @@ export default function Marketplace() {
       });
     }
   }, [category, difficulty, sortBy]);
+
+  async function checkUserRole() {
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) {
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('role')
+          .eq('id', session.user.id)
+          .single();
+        
+        if (profile) {
+          setUserRole(profile.role);
+        }
+      }
+    } catch (error) {
+      console.error('Error checking user role:', error);
+    }
+  }
 
   async function loadPatterns() {
     try {
@@ -132,6 +153,10 @@ export default function Marketplace() {
     }
   }
 
+  const handleAddPattern = () => {
+    navigate('/design-studio', { state: { fromMarketplace: true } });
+  };
+
   const filteredPatterns = patterns.filter(pattern =>
     pattern.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
     pattern.description?.toLowerCase().includes(searchTerm.toLowerCase())
@@ -141,9 +166,17 @@ export default function Marketplace() {
     <div className="min-h-screen bg-background">
       <Navbar />
       <main className="container mx-auto px-4 py-8">
-        <div className="mb-8">
-          <h1 className="text-4xl font-display font-bold text-primary mb-2">Pattern Marketplace</h1>
-          <p className="text-muted-foreground">Discover and purchase unique sewing patterns from talented designers</p>
+        <div className="flex justify-between items-center mb-8">
+          <div>
+            <h1 className="text-4xl font-display font-bold text-primary mb-2">Pattern Marketplace</h1>
+            <p className="text-muted-foreground">Discover and purchase unique sewing patterns from talented designers</p>
+          </div>
+          {userRole === 'designer' && (
+            <Button onClick={handleAddPattern} className="flex items-center gap-2">
+              <Plus className="h-4 w-4" />
+              Add Pattern
+            </Button>
+          )}
         </div>
 
         <div className="flex flex-col md:flex-row gap-4 mb-8">
