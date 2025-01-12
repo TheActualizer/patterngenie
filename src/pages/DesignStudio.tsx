@@ -67,7 +67,7 @@ export default function DesignStudio() {
         .from('projects')
         .select('*')
         .eq('id', projectId)
-        .maybeSingle();
+        .single();
 
       if (error) throw error;
 
@@ -106,21 +106,8 @@ export default function DesignStudio() {
         return;
       }
 
-      // First, ensure a profile exists for the user
-      const { data: profile, error: profileError } = await supabase
-        .from('profiles')
-        .select('id')
-        .eq('id', session.session.user.id)
-        .single();
-
-      if (profileError) {
-        // Create profile if it doesn't exist
-        const { error: insertError } = await supabase
-          .from('profiles')
-          .insert([{ id: session.session.user.id }]);
-
-        if (insertError) throw insertError;
-      }
+      const userId = session.session.user.id;
+      console.log('Saving project for user:', userId);
 
       const projectPayload = {
         title,
@@ -128,13 +115,14 @@ export default function DesignStudio() {
           prompt,
           measurements,
         } as Json,
-        user_id: session.session.user.id,
+        user_id: userId,
         is_draft: true,
       };
 
       let result;
       
       if (projectId) {
+        console.log('Updating existing project:', projectId);
         const { data, error } = await supabase
           .from('projects')
           .update(projectPayload)
@@ -142,16 +130,23 @@ export default function DesignStudio() {
           .select()
           .single();
           
-        if (error) throw error;
+        if (error) {
+          console.error('Error updating project:', error);
+          throw error;
+        }
         result = { data, error };
       } else {
+        console.log('Creating new project');
         const { data, error } = await supabase
           .from('projects')
           .insert([projectPayload])
           .select()
           .single();
           
-        if (error) throw error;
+        if (error) {
+          console.error('Error creating project:', error);
+          throw error;
+        }
         result = { data, error };
       }
 
@@ -166,6 +161,8 @@ export default function DesignStudio() {
       if (!projectId && result.data) {
         navigate(`/design-studio?project=${result.data.id}`, { replace: true });
       }
+
+      console.log('Project saved successfully:', result.data);
     } catch (error) {
       console.error('Error saving project:', error);
       toast.error("Failed to save project");
