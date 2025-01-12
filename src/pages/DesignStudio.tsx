@@ -75,7 +75,7 @@ const DesignStudio = () => {
 
       if (project) {
         setTitle(project.title);
-        const patternData = project.pattern_data as PatternData;
+        const patternData = project.pattern_data as unknown as PatternData;
         setPrompt(patternData.prompt || "");
         setMeasurements(patternData.measurements || {
           bust: 36,
@@ -101,14 +101,17 @@ const DesignStudio = () => {
         return;
       }
 
+      const currentPatternData = {
+        prompt,
+        measurements,
+      };
+
       const projectPayload = {
         title,
-        pattern_data: {
-          prompt,
-          measurements,
-        } as PatternData,
+        pattern_data: currentPatternData,
         user_id: session.session.user.id,
-        is_draft: true
+        is_draft: true,
+        updated_at: new Date().toISOString()
       };
 
       console.log('Saving project with data:', projectPayload);
@@ -118,14 +121,24 @@ const DesignStudio = () => {
       if (projectId) {
         result = await supabase
           .from('projects')
-          .update(projectPayload)
+          .update({
+            title: projectPayload.title,
+            pattern_data: projectPayload.pattern_data,
+            is_draft: projectPayload.is_draft,
+            updated_at: projectPayload.updated_at
+          })
           .eq('id', projectId)
           .select()
           .single();
       } else {
         result = await supabase
           .from('projects')
-          .insert([projectPayload])
+          .insert([{
+            title: projectPayload.title,
+            pattern_data: projectPayload.pattern_data,
+            user_id: projectPayload.user_id,
+            is_draft: projectPayload.is_draft
+          }])
           .select()
           .single();
       }
