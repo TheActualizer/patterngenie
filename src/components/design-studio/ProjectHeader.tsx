@@ -67,17 +67,28 @@ export const ProjectHeader = ({
     <div className="space-y-6 animate-fade-in">
       <div className="bg-white/5 backdrop-blur-xl rounded-xl border border-white/20 shadow-2xl">
         <div className="border-b border-white/10 p-4">
-          <div className="flex items-center justify-between gap-4">
-            <Button
-              variant="outline"
-              onClick={() => navigate('/design-studio')}
-              className="gap-2 hover:bg-primary hover:text-white transition-colors border-white/20"
-            >
-              <Plus className="w-4 h-4" />
-              New Pattern
-            </Button>
+          <div className="flex flex-col gap-4">
+            <div className="flex items-center justify-between">
+              <Button
+                variant="outline"
+                onClick={() => navigate('/design-studio')}
+                className="gap-2 hover:bg-primary hover:text-white transition-colors border-white/20"
+              >
+                <Plus className="w-4 h-4" />
+                New Pattern
+              </Button>
+              
+              <Button
+                onClick={handleSave}
+                disabled={isSaving}
+                className="gap-2 bg-primary hover:bg-primary/90"
+              >
+                <Save className="w-4 h-4" />
+                {isSaving ? "Saving..." : "Save"}
+              </Button>
+            </div>
             
-            <div className="flex items-center gap-2">
+            <div className="flex items-center justify-between gap-2">
               <div className="bg-white/5 backdrop-blur-md rounded-lg border border-white/10 flex items-center gap-1 p-1">
                 <Button
                   variant="ghost"
@@ -97,71 +108,64 @@ export const ProjectHeader = ({
                 </Button>
               </div>
               
-              <Dialog>
-                <DialogTrigger asChild>
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    className="border-white/20 text-white/80 hover:text-white hover:bg-white/10"
-                  >
-                    <Share2 className="w-4 h-4" />
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="bg-white/10 backdrop-blur-xl border border-white/20">
-                  <DialogHeader>
-                    <DialogTitle className="text-white/90">Share Pattern</DialogTitle>
-                    <DialogDescription className="text-white/60">
-                      Share your pattern design with others
-                    </DialogDescription>
-                  </DialogHeader>
-                  <div className="space-y-4">
-                    <div className="flex items-center gap-2">
-                      <Input
-                        readOnly
-                        value={currentUrl}
-                        className="flex-1 bg-black/20 border-white/20 text-white/90"
-                      />
-                      <Button onClick={handleCopyLink} variant="secondary" className="backdrop-blur-sm">
-                        Copy Link
-                      </Button>
+              <div className="flex items-center gap-2">
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      className="border-white/20 text-white/80 hover:text-white hover:bg-white/10"
+                    >
+                      <Share2 className="w-4 h-4" />
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="bg-white/10 backdrop-blur-xl border border-white/20">
+                    <DialogHeader>
+                      <DialogTitle className="text-white/90">Share Pattern</DialogTitle>
+                      <DialogDescription className="text-white/60">
+                        Share your pattern design with others
+                      </DialogDescription>
+                    </DialogHeader>
+                    <div className="space-y-4">
+                      <div className="flex items-center gap-2">
+                        <Input
+                          readOnly
+                          value={currentUrl}
+                          className="flex-1 bg-black/20 border-white/20 text-white/90"
+                        />
+                        <Button onClick={handleCopyLink} variant="secondary" className="backdrop-blur-sm">
+                          Copy Link
+                        </Button>
+                      </div>
+                      <div className="flex gap-2">
+                        <Button
+                          onClick={handleShareOnTwitter}
+                          variant="outline"
+                          className="flex-1 border-white/20"
+                        >
+                          Share on Twitter
+                        </Button>
+                        <Button
+                          onClick={handleShareOnFacebook}
+                          variant="outline"
+                          className="flex-1 border-white/20"
+                        >
+                          Share on Facebook
+                        </Button>
+                      </div>
                     </div>
-                    <div className="flex gap-2">
-                      <Button
-                        onClick={handleShareOnTwitter}
-                        variant="outline"
-                        className="flex-1 border-white/20"
-                      >
-                        Share on Twitter
-                      </Button>
-                      <Button
-                        onClick={handleShareOnFacebook}
-                        variant="outline"
-                        className="flex-1 border-white/20"
-                      >
-                        Share on Facebook
-                      </Button>
-                    </div>
-                  </div>
-                </DialogContent>
-              </Dialog>
+                  </DialogContent>
+                </Dialog>
 
-              <Button
-                variant="outline"
-                size="icon"
-                onClick={onExport}
-                className="border-white/20 text-white/80 hover:text-white hover:bg-white/10"
-              >
-                <Download className="w-4 h-4" />
-              </Button>
-              
-              <Button
-                onClick={handleSave}
-                disabled={isSaving}
-                className="gap-2 bg-primary hover:bg-primary/90"
-              >
-                <Save className="w-4 h-4" />
-                {isSaving ? "Saving..." : "Save"}
-              </Button>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={onExport}
+                  className="border-white/20 text-white/80 hover:text-white hover:bg-white/10"
+                >
+                  <Download className="w-4 h-4" />
+                </Button>
+              </div>
             </div>
           </div>
         </div>
