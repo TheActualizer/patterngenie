@@ -32,6 +32,7 @@ export default function DesignStudio() {
   const [title, setTitle] = useState("Untitled Project");
   const [isSaving, setIsSaving] = useState(false);
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const [projectData, setProjectData] = useState<PatternData>({
     prompt: "",
     measurements: {
@@ -46,14 +47,16 @@ export default function DesignStudio() {
   useEffect(() => {
     if (projectId) {
       loadProject();
+    } else {
+      setIsLoading(false);
     }
   }, [projectId]);
 
   useEffect(() => {
-    if (projectId && debouncedProjectData) {
+    if (!isLoading && projectId && debouncedProjectData) {
       saveProject(true);
     }
-  }, [debouncedProjectData]);
+  }, [debouncedProjectData, isLoading]);
 
   const loadProject = async () => {
     try {
@@ -72,8 +75,11 @@ export default function DesignStudio() {
       if (error) throw error;
 
       if (project) {
-        setTitle(project.title);
+        console.log('Loading project data:', project);
         const patternData = project.pattern_data as { prompt?: string; measurements?: { bust: number; waist: number; hips: number; } };
+        
+        // Update all state values with project data
+        setTitle(project.title);
         setPrompt(patternData.prompt || "");
         setMeasurements(patternData.measurements || {
           bust: 36,
@@ -93,6 +99,8 @@ export default function DesignStudio() {
     } catch (error) {
       console.error('Error loading project:', error);
       toast.error("Failed to load project");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -172,11 +180,17 @@ export default function DesignStudio() {
   };
 
   useEffect(() => {
-    setProjectData({
-      prompt,
-      measurements,
-    });
-  }, [prompt, measurements]);
+    if (!isLoading) {
+      setProjectData({
+        prompt,
+        measurements,
+      });
+    }
+  }, [prompt, measurements, isLoading]);
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
