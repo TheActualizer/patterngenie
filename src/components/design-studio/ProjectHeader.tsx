@@ -18,7 +18,6 @@ interface ProjectHeaderProps {
   lastSaved: Date | null;
   isSaving: boolean;
   onSave: () => void;
-  onShare: () => void;
   onExport: () => void;
 }
 
@@ -28,7 +27,6 @@ export const ProjectHeader = ({
   lastSaved,
   isSaving,
   onSave,
-  onShare,
   onExport,
 }: ProjectHeaderProps) => {
   const navigate = useNavigate();
