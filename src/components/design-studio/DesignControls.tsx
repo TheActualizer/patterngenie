@@ -2,7 +2,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerTrigger } from "@/components/ui/drawer";
-import { Settings } from "lucide-react";
+import { Settings, Ruler } from "lucide-react";
 import { AdvancedSettingsContent } from "./AdvancedSettingsContent";
 import { useState } from "react";
 import { AvatarCustomization } from "./AvatarCustomization";
@@ -22,18 +22,23 @@ export const DesignControls = ({
 
   return (
     <div className="bg-white/50 backdrop-blur-sm rounded-xl shadow-sm border border-gray-100/50 p-6 space-y-6">
-      <AvatarCustomization />
+      <Button variant="outline" className="w-full gap-2 hover:bg-primary hover:text-white transition-colors" asChild>
+        <DialogTrigger>
+          <Ruler className="w-4 h-4" />
+          Body Measurements
+        </DialogTrigger>
+      </Button>
       
       <Drawer>
         <DrawerTrigger asChild>
           <Button variant="outline" className="w-full gap-2 hover:bg-primary hover:text-white transition-colors">
             <Settings className="w-4 h-4" />
-            Advanced Settings
+            Pattern Specifications
           </Button>
         </DrawerTrigger>
         <DrawerContent>
           <DrawerHeader>
-            <DrawerTitle>Advanced Pattern Settings</DrawerTitle>
+            <DrawerTitle>Pattern Specifications</DrawerTitle>
           </DrawerHeader>
           <AdvancedSettingsContent
             fabricType={fabricType}
