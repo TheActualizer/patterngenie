@@ -1,4 +1,27 @@
 project_id = "fsxtbrzeurbjyaabhbss"
 
-[functions.create-checkout-session]
+[api]
+enabled = true
+url = "https://fsxtbrzeurbjyaabhbss.supabase.co"
+
+[db]
+shadow = false
+
+[db.pooler]
+enabled = false
+port = 5432
+
+[realtime]
+enabled = true
+
+[studio]
+enabled = true
+port = 5678
+
+[[edge_functions]]
+name = "create-pattern-checkout"
 verify_jwt = true
+
+[[edge_functions]]
+name = "stripe-webhook"
+verify_jwt = false
