@@ -105,7 +105,7 @@ const DesignStudio = () => {
             </div>
             <div className="mt-4 space-y-2">
               <Button className="w-full" variant="secondary">Customize Avatar</Button>
-              <Button className="w-full" variant="success">Export Pattern</Button>
+              <Button className="w-full" variant="default">Export Pattern</Button>
             </div>
           </div>
         </div>
