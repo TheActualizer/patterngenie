@@ -1,20 +1,12 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Navbar } from "@/components/Navbar";
+import { Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, Star, DollarSign, Eye, Download, Plus } from "lucide-react";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
+import { Navbar } from "@/components/Navbar";
+import { MarketplaceHeader } from "@/components/marketplace/MarketplaceHeader";
+import { MarketplaceFilters } from "@/components/marketplace/MarketplaceFilters";
+import { PatternCard } from "@/components/marketplace/PatternCard";
 import { Database } from "@/integrations/supabase/types";
 
 type Pattern = Database["public"]["Tables"]["patterns"]["Row"] & {
@@ -153,10 +145,6 @@ export default function Marketplace() {
     }
   }
 
-  const handleAddPattern = () => {
-    navigate('/design-studio', { state: { fromMarketplace: true } });
-  };
-
   const filteredPatterns = patterns.filter(pattern =>
     pattern.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
     pattern.description?.toLowerCase().includes(searchTerm.toLowerCase())
@@ -166,64 +154,18 @@ export default function Marketplace() {
     <div className="min-h-screen bg-background">
       <Navbar />
       <main className="container mx-auto px-4 py-8">
-        <div className="flex justify-between items-center mb-8">
-          <div>
-            <h1 className="text-4xl font-display font-bold text-primary mb-2">Pattern Marketplace</h1>
-            <p className="text-muted-foreground">Discover and purchase unique sewing patterns from talented designers</p>
-          </div>
-          {userRole === 'designer' && (
-            <Button onClick={handleAddPattern} className="flex items-center gap-2">
-              <Plus className="h-4 w-4" />
-              Add Pattern
-            </Button>
-          )}
-        </div>
-
-        <div className="flex flex-col md:flex-row gap-4 mb-8">
-          <Input
-            placeholder="Search patterns..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="md:w-1/3"
-          />
-          <Select value={category} onValueChange={(value: PatternCategory | "all") => setCategory(value)}>
-            <SelectTrigger className="md:w-1/4">
-              <SelectValue placeholder="Category" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Categories</SelectItem>
-              <SelectItem value="dresses">Dresses</SelectItem>
-              <SelectItem value="tops">Tops</SelectItem>
-              <SelectItem value="bottoms">Bottoms</SelectItem>
-              <SelectItem value="outerwear">Outerwear</SelectItem>
-              <SelectItem value="accessories">Accessories</SelectItem>
-              <SelectItem value="children">Children</SelectItem>
-              <SelectItem value="other">Other</SelectItem>
-            </SelectContent>
-          </Select>
-          <Select value={difficulty} onValueChange={(value: DifficultyLevel | "all") => setDifficulty(value)}>
-            <SelectTrigger className="md:w-1/4">
-              <SelectValue placeholder="Difficulty" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Levels</SelectItem>
-              <SelectItem value="beginner">Beginner</SelectItem>
-              <SelectItem value="intermediate">Intermediate</SelectItem>
-              <SelectItem value="advanced">Advanced</SelectItem>
-            </SelectContent>
-          </Select>
-          <Select value={sortBy} onValueChange={setSortBy}>
-            <SelectTrigger className="md:w-1/4">
-              <SelectValue placeholder="Sort by" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="newest">Newest First</SelectItem>
-              <SelectItem value="popular">Most Popular</SelectItem>
-              <SelectItem value="price-low">Price: Low to High</SelectItem>
-              <SelectItem value="price-high">Price: High to Low</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
+        <MarketplaceHeader userRole={userRole} />
+        
+        <MarketplaceFilters
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
+          category={category}
+          setCategory={setCategory}
+          difficulty={difficulty}
+          setDifficulty={setDifficulty}
+          sortBy={sortBy}
+          setSortBy={setSortBy}
+        />
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {loading ? (
@@ -236,69 +178,12 @@ export default function Marketplace() {
             </div>
           ) : (
             filteredPatterns.map((pattern) => (
-              <Card key={pattern.id} className="flex flex-col">
-                <CardHeader>
-                  {pattern.thumbnail_url && (
-                    <div className="aspect-video w-full overflow-hidden rounded-lg mb-4">
-                      <img
-                        src={pattern.thumbnail_url}
-                        alt={pattern.title}
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                  )}
-                  <CardTitle className="line-clamp-2">{pattern.title}</CardTitle>
-                  <CardDescription className="flex items-center gap-2">
-                    <Badge variant="secondary">{pattern.difficulty}</Badge>
-                    <Badge variant="outline">{pattern.category}</Badge>
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="flex-grow">
-                  <p className="text-sm text-muted-foreground line-clamp-3 mb-4">
-                    {pattern.description}
-                  </p>
-                  <div className="flex items-center justify-between text-sm text-muted-foreground">
-                    <span className="flex items-center gap-1">
-                      <Download className="h-4 w-4" />
-                      {pattern.sales_count || 0}
-                    </span>
-                    <span className="flex items-center gap-1">
-                      <Eye className="h-4 w-4" />
-                      {pattern.views || 0}
-                    </span>
-                    <span className="flex items-center gap-1">
-                      <Star className="h-4 w-4" />
-                      4.5
-                    </span>
-                  </div>
-                </CardContent>
-                <CardFooter className="flex justify-between items-center">
-                  <span className="text-lg font-bold text-primary">
-                    ${pattern.price}
-                  </span>
-                  <div className="flex gap-2">
-                    <Button variant="outline" onClick={() => navigate(`/patterns/${pattern.id}`)}>
-                      Details
-                    </Button>
-                    <Button 
-                      onClick={() => handleBuyPattern(pattern.id)}
-                      disabled={buyingPattern === pattern.id}
-                    >
-                      {buyingPattern === pattern.id ? (
-                        <>
-                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                          Processing...
-                        </>
-                      ) : (
-                        <>
-                          <DollarSign className="mr-2 h-4 w-4" />
-                          Buy Now
-                        </>
-                      )}
-                    </Button>
-                  </div>
-                </CardFooter>
-              </Card>
+              <PatternCard
+                key={pattern.id}
+                pattern={pattern}
+                onBuy={handleBuyPattern}
+                buyingPattern={buyingPattern}
+              />
             ))
           )}
         </div>
