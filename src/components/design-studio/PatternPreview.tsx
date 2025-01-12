@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { AvatarCustomization } from "./AvatarCustomization";
 
 interface PatternPreviewProps {
   onExport: () => void;
@@ -22,7 +23,7 @@ export const PatternPreview = ({ onExport }: PatternPreviewProps) => {
           <p className="text-gray-500 font-medium">3D Preview Coming Soon</p>
         </div>
         <div className="space-y-2">
-          <Button className="w-full" variant="outline">Customize Avatar</Button>
+          <AvatarCustomization />
           <Button className="w-full" variant="default" onClick={onExport}>Export Pattern</Button>
         </div>
       </div>
