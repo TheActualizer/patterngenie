@@ -11,12 +11,10 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
   Form,
   FormControl,
@@ -66,7 +64,6 @@ const AuthPage = () => {
     const { data: authListener } = supabase.auth.onAuthStateChange(async (event, session) => {
       console.log("Auth state changed:", event, session);
       if (event === "SIGNED_IN") {
-        // Create Stripe checkout session
         try {
           const response = await fetch("/api/create-checkout-session", {
             method: "POST",
@@ -76,9 +73,13 @@ const AuthPage = () => {
             },
           });
 
-          const { url } = await response.json();
-          if (url) {
-            window.location.href = url;
+          if (!response.ok) {
+            throw new Error('Failed to create checkout session');
+          }
+
+          const data = await response.json();
+          if (data.url) {
+            window.location.href = data.url;
           } else {
             toast({
               title: "Welcome!",
@@ -113,7 +114,8 @@ const AuthPage = () => {
     setAuthError(null);
 
     try {
-      const { error: signUpError } = await supabase.auth.signUp({
+      // First create the user account
+      const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
         email: values.email,
         password: values.password,
         options: {
@@ -125,6 +127,21 @@ const AuthPage = () => {
       });
 
       if (signUpError) throw signUpError;
+
+      // If signup was successful, create the profile
+      if (signUpData.user) {
+        const { error: profileError } = await supabase
+          .from('profiles')
+          .insert([
+            {
+              id: signUpData.user.id,
+              full_name: values.fullName,
+              username: values.username,
+            }
+          ]);
+
+        if (profileError) throw profileError;
+      }
 
       toast({
         title: "Account created!",
