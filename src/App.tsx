@@ -7,6 +7,7 @@ import Index from "./pages/Index";
 import DesignStudio from "./pages/DesignStudio";
 import Marketplace from "./pages/Marketplace";
 import AuthPage from "./pages/Auth";
+import Account from "./pages/Account";
 
 const queryClient = new QueryClient();
 
@@ -22,6 +23,7 @@ const App = () => (
           <Route path="/design-studio" element={<DesignStudio />} />
           <Route path="/marketplace" element={<Marketplace />} />
           <Route path="/auth" element={<AuthPage />} />
+          <Route path="/account" element={<Account />} />
         </Routes>
       </BrowserRouter>
     </TooltipProvider>
