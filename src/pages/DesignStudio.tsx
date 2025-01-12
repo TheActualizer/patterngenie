@@ -149,18 +149,6 @@ export default function DesignStudio() {
     toast.info("Export functionality coming soon!");
   };
 
-  const handleShare = () => {
-    toast.info("Sharing functionality coming soon!");
-  };
-
-  useEffect(() => {
-    if (!isLoading) {
-      setProjectData({
-        prompt,
-      });
-    }
-  }, [prompt, isLoading]);
-
   if (isLoading) {
     return <div>Loading...</div>;
   }
@@ -168,7 +156,7 @@ export default function DesignStudio() {
   return (
     <div className="min-h-screen bg-gray-50">
       <Navbar />
-      <div className="container mx-auto px-4 py-8 max-w-7xl">
+      <div className="container mx-auto py-6">
         <h1 className="text-3xl font-display font-semibold text-center text-gray-900 mb-6">
           Design Studio
         </h1>
@@ -182,16 +170,12 @@ export default function DesignStudio() {
           onExport={handleExport}
         />
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div>
-            <DesignControls
-              prompt={prompt}
-              setPrompt={setPrompt}
-            />
-          </div>
-          <div className="lg:col-span-2">
-            <PatternPreview onExport={handleExport} />
-          </div>
+        <div className="mt-6 space-y-4 px-4 sm:px-6">
+          <DesignControls
+            prompt={prompt}
+            setPrompt={setPrompt}
+          />
+          <PatternPreview onExport={handleExport} />
         </div>
       </div>
       <ChatBot />
