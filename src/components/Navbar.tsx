@@ -13,29 +13,14 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useToast } from "@/components/ui/use-toast";
-import { 
-  UserCircle2, 
-  FolderOpen, 
-  Scissors, 
-  Menu, 
-  Settings, 
-  LogOut, 
-  ShoppingBag, 
-  Palette, 
-  BookOpen, 
-  Heart,
-  MessageSquare,
-  HelpCircle
-} from "lucide-react";
+import { UserCircle2, FolderOpen, Scissors, Menu, Settings, LogOut } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { SettingsDialog } from "./settings/SettingsDialog";
-import { useIsMobile } from "@/hooks/use-mobile";
 
 export function Navbar() {
   const [user, setUser] = useState<User | null>(null);
   const { toast } = useToast();
   const navigate = useNavigate();
-  const isMobile = useIsMobile();
 
   useEffect(() => {
     // Get initial session
@@ -68,38 +53,12 @@ export function Navbar() {
     <>
       <Link to="/marketplace">
         <Button variant="ghost" className="font-medium text-gray-600 hover:text-gray-900 hover:bg-purple-50">
-          <ShoppingBag className="w-4 h-4 mr-2" />
-          {!isMobile && "Marketplace"}
+          Marketplace
         </Button>
       </Link>
       <Link to="/design-studio">
         <Button variant="ghost" className="font-medium text-gray-600 hover:text-gray-900 hover:bg-purple-50">
-          <Palette className="w-4 h-4 mr-2" />
-          {!isMobile && "Design Studio"}
-        </Button>
-      </Link>
-      <Link to="/tutorials">
-        <Button variant="ghost" className="font-medium text-gray-600 hover:text-gray-900 hover:bg-purple-50">
-          <BookOpen className="w-4 h-4 mr-2" />
-          {!isMobile && "Tutorials"}
-        </Button>
-      </Link>
-      <Link to="/community">
-        <Button variant="ghost" className="font-medium text-gray-600 hover:text-gray-900 hover:bg-purple-50">
-          <MessageSquare className="w-4 h-4 mr-2" />
-          {!isMobile && "Community"}
-        </Button>
-      </Link>
-      <Link to="/favorites">
-        <Button variant="ghost" className="font-medium text-gray-600 hover:text-gray-900 hover:bg-purple-50">
-          <Heart className="w-4 h-4 mr-2" />
-          {!isMobile && "Favorites"}
-        </Button>
-      </Link>
-      <Link to="/help">
-        <Button variant="ghost" className="font-medium text-gray-600 hover:text-gray-900 hover:bg-purple-50">
-          <HelpCircle className="w-4 h-4 mr-2" />
-          {!isMobile && "Help Center"}
+          Design Studio
         </Button>
       </Link>
     </>
@@ -119,7 +78,7 @@ export function Navbar() {
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-4">
+          <div className="hidden md:flex items-center space-x-8">
             <NavLinks />
             {user ? (
               <DropdownMenu>
@@ -149,12 +108,7 @@ export function Navbar() {
                     <FolderOpen className="mr-2 h-4 w-4" />
                     My Projects
                   </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Button variant="ghost" className="w-full justify-start">
-                      <Settings className="mr-2 h-4 w-4" />
-                      Settings
-                    </Button>
-                  </DropdownMenuItem>
+                  <SettingsDialog />
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={handleSignOut} className="cursor-pointer text-red-600 focus:text-red-600">
                     <LogOut className="mr-2 h-4 w-4" />
@@ -203,10 +157,7 @@ export function Navbar() {
                           <FolderOpen className="mr-2 h-4 w-4" />
                           My Projects
                         </Button>
-                        <Button variant="ghost" className="w-full justify-start">
-                          <Settings className="mr-2 h-4 w-4" />
-                          Settings
-                        </Button>
+                        <SettingsDialog />
                         <Button variant="ghost" className="w-full justify-start text-red-600" onClick={handleSignOut}>
                           <LogOut className="mr-2 h-4 w-4" />
                           Sign out
