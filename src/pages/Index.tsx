@@ -68,13 +68,10 @@ const Index = () => {
           <div className="max-w-4xl mx-auto">
             <div className="aspect-video rounded-xl overflow-hidden shadow-xl">
               <iframe 
-                src="https://www.facebook.com/plugins/video.php?href=https%3A%2F%2Fwww.facebook.com%2Fshare%2Fv%2F15dbKFRkT3%2F&show_text=false"
+                src="https://www.youtube.com/embed/eXlqLTSWMv4"
                 className="w-full h-full"
-                style={{ border: 'none', overflow: 'hidden' }}
-                scrolling="no"
-                frameBorder="0"
-                allowFullScreen={true}
-                allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
               ></iframe>
             </div>
             
