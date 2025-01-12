@@ -51,7 +51,6 @@ export const AvatarCustomization = () => {
 
   useEffect(() => {
     loadProfileMeasurements();
-    loadExistingPhotos();
   }, []);
 
   const loadProfileMeasurements = async () => {
@@ -61,7 +60,7 @@ export const AvatarCustomization = () => {
 
       const { data, error } = await supabase
         .from('profiles')
-        .select('measurements')
+        .select('measurements, avatar_front_url, avatar_side_url')
         .eq('id', session.user.id)
         .single();
 
@@ -69,57 +68,18 @@ export const AvatarCustomization = () => {
 
       if (data?.measurements) {
         const measurementsData = data.measurements as Record<string, string | null>;
-        setMeasurements({
-          bust: measurementsData.bust || null,
-          waist: measurementsData.waist || null,
-          hips: measurementsData.hips || null,
-          shoulder: measurementsData.shoulder || null,
-          arm_length: measurementsData.arm_length || null,
-          inseam: measurementsData.inseam || null,
-          neck: measurementsData.neck || null,
-          chest: measurementsData.chest || null,
-          back_width: measurementsData.back_width || null,
-          front_length: measurementsData.front_length || null,
-          sleeve_length: measurementsData.sleeve_length || null,
-        });
+        setMeasurements(measurementsData as Measurements);
+      }
+      
+      if (data?.avatar_front_url) {
+        setFrontImageUrl(data.avatar_front_url);
+      }
+      
+      if (data?.avatar_side_url) {
+        setSideImageUrl(data.avatar_side_url);
       }
     } catch (error) {
       console.error('Error loading measurements:', error);
-    }
-  };
-
-  const loadExistingPhotos = async () => {
-    try {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) return;
-
-      const userId = session.user.id;
-      
-      try {
-        const { data: frontData } = await supabase.storage
-          .from('avatars')
-          .createSignedUrl(`${userId}/front.jpg`, 3600);
-        
-        if (frontData?.signedUrl) {
-          setFrontImageUrl(frontData.signedUrl);
-        }
-      } catch (error) {
-        console.log('Front photo not found:', error);
-      }
-
-      try {
-        const { data: sideData } = await supabase.storage
-          .from('avatars')
-          .createSignedUrl(`${userId}/side.jpg`, 3600);
-        
-        if (sideData?.signedUrl) {
-          setSideImageUrl(sideData.signedUrl);
-        }
-      } catch (error) {
-        console.log('Side photo not found:', error);
-      }
-    } catch (error) {
-      console.error('Error loading existing photos:', error);
     }
   };
 
@@ -144,11 +104,24 @@ export const AvatarCustomization = () => {
 
       if (uploadError) throw uploadError;
 
-      const { data } = await supabase.storage
+      const { data: urlData } = await supabase.storage
         .from('avatars')
         .createSignedUrl(filePath, 3600);
 
-      return data?.signedUrl;
+      if (!urlData?.signedUrl) throw new Error('Failed to get signed URL');
+
+      // Update the profile with the new avatar URL
+      const { error: updateError } = await supabase
+        .from('profiles')
+        .update({
+          [`avatar_${type}_url`]: urlData.signedUrl,
+          updated_at: new Date().toISOString(),
+        })
+        .eq('id', userId);
+
+      if (updateError) throw updateError;
+
+      return urlData.signedUrl;
     } catch (error) {
       console.error(`Error uploading ${type} photo:`, error);
       toast.error(`Failed to upload ${type} photo`);
