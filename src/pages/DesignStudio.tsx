@@ -162,39 +162,54 @@ export default function DesignStudio() {
   }, [prompt, isLoading]);
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center">
+        <div className="animate-pulse text-white/80 text-lg">Loading your design space...</div>
+      </div>
+    );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800">
       <Navbar />
       <div className="container mx-auto px-4 py-8 max-w-7xl">
-        <h1 className="text-3xl font-display font-semibold text-center text-gray-900 mb-6">
+        <h1 className="text-4xl font-display font-semibold text-center text-white mb-8 animate-fade-in">
           Design Studio
+          <span className="block text-sm font-sans font-normal text-gray-400 mt-2">
+            Create, customize, and bring your designs to life
+          </span>
         </h1>
         
-        <ProjectHeader
-          title={title}
-          setTitle={setTitle}
-          lastSaved={lastSaved}
-          isSaving={isSaving}
-          onSave={() => saveProject()}
-          onExport={handleExport}
-        />
+        <div className="space-y-6 animate-fade-in">
+          <ProjectHeader
+            title={title}
+            setTitle={setTitle}
+            lastSaved={lastSaved}
+            isSaving={isSaving}
+            onSave={() => saveProject()}
+            onExport={handleExport}
+          />
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div>
-            <DesignControls
-              prompt={prompt}
-              setPrompt={setPrompt}
-            />
-          </div>
-          <div className="lg:col-span-2">
-            <PatternPreview onExport={handleExport} />
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="lg:col-span-1 animate-fade-in" style={{ animationDelay: "200ms" }}>
+              <DesignControls
+                prompt={prompt}
+                setPrompt={setPrompt}
+              />
+            </div>
+            <div className="lg:col-span-2 animate-fade-in" style={{ animationDelay: "400ms" }}>
+              <PatternPreview onExport={handleExport} />
+            </div>
           </div>
         </div>
       </div>
       <ChatBot />
+      
+      {/* Decorative elements */}
+      <div className="fixed inset-0 pointer-events-none">
+        <div className="absolute top-0 left-0 w-1/3 h-1/3 bg-primary/5 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-0 right-0 w-1/2 h-1/2 bg-secondary/5 rounded-full blur-3xl"></div>
+      </div>
     </div>
   );
 }
