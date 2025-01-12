@@ -3,6 +3,10 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerTrigger } from "@/components/ui/drawer";
+import { FilePlus, Settings } from "lucide-react";
+import { AdvancedSettingsContent } from "./AdvancedSettingsContent";
+import { useState } from "react";
+import { toast } from "sonner";
 
 interface Measurements {
   bust: number;
@@ -23,10 +27,25 @@ export const DesignControls = ({
   measurements,
   setMeasurements,
 }: DesignControlsProps) => {
+  const [fabricType, setFabricType] = useState("woven");
+  const [designStyle, setDesignStyle] = useState("casual");
+  const [features, setFeatures] = useState<string[]>([]);
+
+  const handleCreateNewPattern = () => {
+    // TODO: Implement pattern creation logic
+    toast.info("Creating new pattern...");
+  };
+
   return (
     <div className="space-y-6 bg-gray-50 p-6 rounded-lg">
       <div>
-        <h2 className="text-2xl font-display font-semibold mb-4">Design Studio</h2>
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-2xl font-display font-semibold">Design Studio</h2>
+          <Button onClick={handleCreateNewPattern} className="gap-2">
+            <FilePlus className="w-4 h-4" />
+            New Pattern
+          </Button>
+        </div>
         <div className="space-y-4">
           <div>
             <Label htmlFor="prompt">Describe your design</Label>
@@ -79,15 +98,23 @@ export const DesignControls = ({
 
       <Drawer>
         <DrawerTrigger asChild>
-          <Button variant="outline" className="w-full">Advanced Settings</Button>
+          <Button variant="outline" className="w-full gap-2">
+            <Settings className="w-4 h-4" />
+            Advanced Settings
+          </Button>
         </DrawerTrigger>
         <DrawerContent>
           <DrawerHeader>
             <DrawerTitle>Advanced Pattern Settings</DrawerTitle>
           </DrawerHeader>
-          <div className="p-4 space-y-4">
-            <p className="text-muted-foreground">Advanced settings coming soon...</p>
-          </div>
+          <AdvancedSettingsContent
+            fabricType={fabricType}
+            setFabricType={setFabricType}
+            designStyle={designStyle}
+            setDesignStyle={setDesignStyle}
+            features={features}
+            setFeatures={setFeatures}
+          />
         </DrawerContent>
       </Drawer>
     </div>
