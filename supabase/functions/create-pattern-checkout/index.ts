@@ -63,12 +63,20 @@ serve(async (req) => {
       customer: customerId,
       line_items: [
         {
-          price: 'price_1QgO6eJd7FprxTeFk3EYYN5i',
+          price_data: {
+            currency: 'usd',
+            product_data: {
+              name: pattern.title,
+              description: pattern.description,
+              images: pattern.thumbnail_url ? [pattern.thumbnail_url] : undefined,
+            },
+            unit_amount: Math.round(pattern.price * 100), // Convert to cents
+          },
           quantity: 1,
         },
       ],
       mode: 'payment',
-      success_url: `${req.headers.get('origin')}/account?success=true`,
+      success_url: `${req.headers.get('origin')}/marketplace?success=true`,
       cancel_url: `${req.headers.get('origin')}/marketplace?canceled=true`,
       metadata: {
         patternId,

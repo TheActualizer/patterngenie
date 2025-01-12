@@ -68,11 +68,15 @@ export type Database = {
           format: Database["public"]["Enums"]["pattern_format"][]
           id: string
           is_approved: boolean | null
+          last_version_update: string | null
           price: number
+          sales_count: number | null
           thumbnail_url: string | null
           title: string
+          total_revenue: number | null
           updated_at: string
           version: string | null
+          views: number | null
         }
         Insert: {
           category: Database["public"]["Enums"]["pattern_category"]
@@ -84,11 +88,15 @@ export type Database = {
           format: Database["public"]["Enums"]["pattern_format"][]
           id?: string
           is_approved?: boolean | null
+          last_version_update?: string | null
           price: number
+          sales_count?: number | null
           thumbnail_url?: string | null
           title: string
+          total_revenue?: number | null
           updated_at?: string
           version?: string | null
+          views?: number | null
         }
         Update: {
           category?: Database["public"]["Enums"]["pattern_category"]
@@ -100,11 +108,15 @@ export type Database = {
           format?: Database["public"]["Enums"]["pattern_format"][]
           id?: string
           is_approved?: boolean | null
+          last_version_update?: string | null
           price?: number
+          sales_count?: number | null
           thumbnail_url?: string | null
           title?: string
+          total_revenue?: number | null
           updated_at?: string
           version?: string | null
+          views?: number | null
         }
         Relationships: [
           {
