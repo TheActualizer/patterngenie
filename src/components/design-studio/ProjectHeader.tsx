@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Save, Share2, Undo, Redo, Download, Plus } from "lucide-react";
+import { Save, Share2, Undo, Redo, Download, Plus, Pencil } from "lucide-react";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import {
@@ -53,9 +53,19 @@ export const ProjectHeader = ({
     window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank');
   };
 
+  const handleSave = () => {
+    onSave();
+    toast.success("Project saved! View it in the Projects tab.", {
+      action: {
+        label: "View Projects",
+        onClick: () => navigate('/projects')
+      }
+    });
+  };
+
   return (
     <div className="space-y-6">
-      <div className="bg-white/50 backdrop-blur-sm rounded-xl shadow-sm border border-gray-100/50 p-4 space-y-4">
+      <div className="bg-white/50 backdrop-blur-sm rounded-xl shadow-sm border border-gray-200 p-4 space-y-4">
         <div className="flex items-center justify-between gap-4">
           <Button
             variant="outline"
@@ -67,81 +77,83 @@ export const ProjectHeader = ({
           </Button>
           
           <div className="flex items-center gap-2">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => toast.info("Undo functionality coming soon!")}
-              className="text-gray-500 hover:text-gray-700"
-            >
-              <Undo className="w-4 h-4" />
-            </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => toast.info("Redo functionality coming soon!")}
-              className="text-gray-500 hover:text-gray-700"
-            >
-              <Redo className="w-4 h-4" />
-            </Button>
-            
-            <Dialog>
-              <DialogTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="text-gray-500 hover:text-gray-700"
-                >
-                  <Share2 className="w-4 h-4" />
-                </Button>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>Share Pattern</DialogTitle>
-                  <DialogDescription>
-                    Share your pattern design with others
-                  </DialogDescription>
-                </DialogHeader>
-                <div className="space-y-4">
-                  <div className="flex items-center gap-2">
-                    <Input
-                      readOnly
-                      value={currentUrl}
-                      className="flex-1"
-                    />
-                    <Button onClick={handleCopyLink} variant="secondary">
-                      Copy Link
-                    </Button>
+            <div className="border border-gray-200 rounded-lg p-1 flex items-center gap-1 bg-white/50">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => toast.info("Undo functionality coming soon!")}
+                className="text-gray-500 hover:text-gray-700"
+              >
+                <Undo className="w-4 h-4" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => toast.info("Redo functionality coming soon!")}
+                className="text-gray-500 hover:text-gray-700"
+              >
+                <Redo className="w-4 h-4" />
+              </Button>
+              
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="text-gray-500 hover:text-gray-700"
+                  >
+                    <Share2 className="w-4 h-4" />
+                  </Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Share Pattern</DialogTitle>
+                    <DialogDescription>
+                      Share your pattern design with others
+                    </DialogDescription>
+                  </DialogHeader>
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-2">
+                      <Input
+                        readOnly
+                        value={currentUrl}
+                        className="flex-1"
+                      />
+                      <Button onClick={handleCopyLink} variant="secondary">
+                        Copy Link
+                      </Button>
+                    </div>
+                    <div className="flex gap-2">
+                      <Button
+                        onClick={handleShareOnTwitter}
+                        variant="outline"
+                        className="flex-1"
+                      >
+                        Share on Twitter
+                      </Button>
+                      <Button
+                        onClick={handleShareOnFacebook}
+                        variant="outline"
+                        className="flex-1"
+                      >
+                        Share on Facebook
+                      </Button>
+                    </div>
                   </div>
-                  <div className="flex gap-2">
-                    <Button
-                      onClick={handleShareOnTwitter}
-                      variant="outline"
-                      className="flex-1"
-                    >
-                      Share on Twitter
-                    </Button>
-                    <Button
-                      onClick={handleShareOnFacebook}
-                      variant="outline"
-                      className="flex-1"
-                    >
-                      Share on Facebook
-                    </Button>
-                  </div>
-                </div>
-              </DialogContent>
-            </Dialog>
+                </DialogContent>
+              </Dialog>
 
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={onExport}
+                className="text-gray-500 hover:text-gray-700"
+              >
+                <Download className="w-4 h-4" />
+              </Button>
+            </div>
             <Button
-              variant="ghost"
-              size="sm"
-              onClick={onExport}
-              className="text-gray-500 hover:text-gray-700"
-            >
-              <Download className="w-4 h-4" />
-            </Button>
-            <Button
-              onClick={onSave}
+              onClick={handleSave}
               disabled={isSaving}
               className="gap-2 bg-primary hover:bg-primary/90"
             >
@@ -152,12 +164,15 @@ export const ProjectHeader = ({
         </div>
 
         <div className="flex flex-col items-center gap-1">
-          <Input
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            className="text-xl font-display font-medium bg-transparent border-0 px-0 focus-visible:ring-0 text-center w-full max-w-md"
-            placeholder="Enter project name..."
-          />
+          <div className="relative group w-full max-w-md">
+            <Input
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              className="text-xl font-display font-medium bg-transparent border-0 px-0 focus-visible:ring-0 text-center w-full hover:bg-gray-50/50 transition-colors"
+              placeholder="Enter project name..."
+            />
+            <Pencil className="w-4 h-4 text-gray-400 absolute right-2 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
+          </div>
           <span className="text-sm text-gray-500">
             {lastSaved ? `Last saved ${lastSaved.toLocaleTimeString()}` : "Not saved yet"}
           </span>
