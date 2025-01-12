@@ -53,6 +53,16 @@ export const ProjectHeader = ({
     window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank');
   };
 
+  const handleSave = () => {
+    onSave();
+    toast.success("Project saved! You can view it in the Projects tab.", {
+      action: {
+        label: "View Projects",
+        onClick: () => navigate('/projects')
+      }
+    });
+  };
+
   return (
     <div className="space-y-6 animate-fade-in">
       <div className="bg-white/5 backdrop-blur-xl rounded-xl border border-white/20 shadow-2xl">
@@ -68,29 +78,31 @@ export const ProjectHeader = ({
             </Button>
             
             <div className="flex items-center gap-2">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => toast.info("Undo functionality coming soon!")}
-                className="text-white/60 hover:text-white/90"
-              >
-                <Undo className="w-4 h-4" />
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => toast.info("Redo functionality coming soon!")}
-                className="text-white/60 hover:text-white/90"
-              >
-                <Redo className="w-4 h-4" />
-              </Button>
+              <div className="bg-white/5 backdrop-blur-md rounded-lg border border-white/10 flex items-center gap-1 p-1">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => toast.info("Undo functionality coming soon!")}
+                  className="text-white/80 hover:text-white hover:bg-white/10"
+                >
+                  <Undo className="w-4 h-4" />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => toast.info("Redo functionality coming soon!")}
+                  className="text-white/80 hover:text-white hover:bg-white/10"
+                >
+                  <Redo className="w-4 h-4" />
+                </Button>
+              </div>
               
               <Dialog>
                 <DialogTrigger asChild>
                   <Button
-                    variant="ghost"
-                    size="sm"
-                    className="text-white/60 hover:text-white/90"
+                    variant="outline"
+                    size="icon"
+                    className="border-white/20 text-white/80 hover:text-white hover:bg-white/10"
                   >
                     <Share2 className="w-4 h-4" />
                   </Button>
@@ -134,15 +146,16 @@ export const ProjectHeader = ({
               </Dialog>
 
               <Button
-                variant="ghost"
-                size="sm"
+                variant="outline"
+                size="icon"
                 onClick={onExport}
-                className="text-white/60 hover:text-white/90"
+                className="border-white/20 text-white/80 hover:text-white hover:bg-white/10"
               >
                 <Download className="w-4 h-4" />
               </Button>
+              
               <Button
-                onClick={onSave}
+                onClick={handleSave}
                 disabled={isSaving}
                 className="gap-2 bg-primary hover:bg-primary/90"
               >
