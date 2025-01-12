@@ -13,9 +13,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useToast } from "@/components/ui/use-toast";
-import { UserCircle2, FolderOpen, Menu, LogOut, Scissors, Settings } from "lucide-react";
+import { UserCircle2, FolderOpen, Menu, LogOut, Scissors, Settings, GraduationCap } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { SettingsDialog } from "./settings/SettingsDialog";
 
 export function Navbar() {
   const [user, setUser] = useState<User | null>(null);
@@ -59,6 +58,12 @@ export function Navbar() {
       <Link to="/design-studio">
         <Button variant="ghost" className="font-medium text-gray-600 hover:text-gray-900 hover:bg-purple-50">
           Design Studio
+        </Button>
+      </Link>
+      <Link to="/classes">
+        <Button variant="ghost" className="font-medium text-gray-600 hover:text-gray-900 hover:bg-purple-50">
+          <GraduationCap className="w-4 h-4 mr-2" />
+          Classes
         </Button>
       </Link>
     </>
