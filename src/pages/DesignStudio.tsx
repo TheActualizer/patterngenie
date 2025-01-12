@@ -179,7 +179,6 @@ export default function DesignStudio() {
           lastSaved={lastSaved}
           isSaving={isSaving}
           onSave={() => saveProject()}
-          onShare={handleShare}
           onExport={handleExport}
         />
 
