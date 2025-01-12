@@ -27,8 +27,6 @@ export const ProjectHeader = ({
 
   return (
     <div className="space-y-6">
-      <h1 className="text-3xl font-display font-semibold text-center text-gray-900">Design Studio</h1>
-      
       <div className="bg-white/50 backdrop-blur-sm rounded-xl shadow-sm border border-gray-100/50 p-4 space-y-4">
         <div className="flex items-center justify-between gap-4">
           <Button

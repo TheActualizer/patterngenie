@@ -8,6 +8,7 @@ import { useDebounce } from "@/hooks/use-debounce";
 import { ProjectHeader } from "@/components/design-studio/ProjectHeader";
 import { DesignControls } from "@/components/design-studio/DesignControls";
 import { PatternPreview } from "@/components/design-studio/PatternPreview";
+import { ChatBot } from "@/components/design-studio/ChatBot";
 
 interface PatternData {
   prompt: string;
@@ -196,6 +197,10 @@ export default function DesignStudio() {
     <div className="min-h-screen bg-gray-50">
       <Navbar />
       <div className="container mx-auto px-4 py-8 max-w-7xl">
+        <h1 className="text-3xl font-display font-semibold text-center text-gray-900 mb-6">
+          Design Studio
+        </h1>
+        
         <ProjectHeader
           title={title}
           setTitle={setTitle}
@@ -220,6 +225,7 @@ export default function DesignStudio() {
           </div>
         </div>
       </div>
+      <ChatBot />
     </div>
   );
 }
