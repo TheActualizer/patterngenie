@@ -12,15 +12,47 @@ import {
 } from "@/components/ui/accordion";
 import { useState } from "react";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 
 const Index = () => {
   const [email, setEmail] = useState("");
+  const [isSubscribing, setIsSubscribing] = useState(false);
 
-  const handleSubscribe = (e: React.FormEvent) => {
+  const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Here you would typically integrate with a newsletter service
-    toast.success("Thanks for subscribing! We'll be in touch soon.");
-    setEmail("");
+    
+    if (!email) {
+      toast.error("Please enter your email address");
+      return;
+    }
+
+    try {
+      setIsSubscribing(true);
+      console.log("Attempting to subscribe email:", email);
+      
+      const { error } = await supabase
+        .from('newsletter_subscriptions')
+        .insert([{ email }]);
+
+      if (error) {
+        console.error("Subscription error:", error);
+        if (error.code === '23505') { // Unique violation error code
+          toast.error("This email is already subscribed!");
+        } else {
+          toast.error("Failed to subscribe. Please try again.");
+        }
+        return;
+      }
+
+      console.log("Successfully subscribed email:", email);
+      toast.success("Thanks for subscribing! We'll be in touch soon.");
+      setEmail("");
+    } catch (err) {
+      console.error("Subscription error:", err);
+      toast.error("Something went wrong. Please try again.");
+    } finally {
+      setIsSubscribing(false);
+    }
   };
 
   return (
@@ -174,9 +206,14 @@ const Index = () => {
                 onChange={(e) => setEmail(e.target.value)}
                 required
                 className="flex-grow"
+                disabled={isSubscribing}
               />
-              <Button type="submit" className="bg-purple-600 hover:bg-purple-700 text-white">
-                Subscribe
+              <Button 
+                type="submit" 
+                className="bg-purple-600 hover:bg-purple-700 text-white"
+                disabled={isSubscribing}
+              >
+                {isSubscribing ? "Subscribing..." : "Subscribe"}
               </Button>
             </form>
           </div>
