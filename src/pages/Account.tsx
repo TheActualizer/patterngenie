@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Navbar } from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
@@ -7,9 +7,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useToast } from "@/components/ui/use-toast";
 import { Loader2 } from "lucide-react";
+import { SettingsDialog } from "@/components/settings/SettingsDialog";
 
 export default function Account() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { toast } = useToast();
   const [loading, setLoading] = useState(true);
   const [profile, setProfile] = useState<any>(null);
@@ -17,6 +19,15 @@ export default function Account() {
   useEffect(() => {
     getProfile();
   }, []);
+
+  useEffect(() => {
+    if (location.pathname === "/account/settings") {
+      const settingsButton = document.querySelector('[aria-label="Settings"]') as HTMLButtonElement;
+      if (settingsButton) {
+        settingsButton.click();
+      }
+    }
+  }, [location.pathname]);
 
   async function getProfile() {
     try {
@@ -119,13 +130,13 @@ export default function Account() {
                   {new Date(profile?.created_at).toLocaleDateString()}
                 </p>
               </div>
-              <Button className="w-full" onClick={() => navigate("/account/projects")}>
+              <Button className="w-full" onClick={() => navigate("/projects")}>
                 View My Projects
               </Button>
               <Button 
                 variant="outline" 
                 className="w-full"
-                onClick={() => navigate("/account/purchases")}
+                onClick={() => navigate("/marketplace")}
               >
                 Purchase History
               </Button>
