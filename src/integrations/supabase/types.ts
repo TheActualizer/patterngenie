@@ -136,6 +136,7 @@ export type Database = {
           id: string
           last_active_at: string | null
           measurement_units: string | null
+          measurements: Json | null
           preferences: Json | null
           role: Database["public"]["Enums"]["user_role"] | null
           stripe_account_id: string | null
@@ -150,6 +151,7 @@ export type Database = {
           id: string
           last_active_at?: string | null
           measurement_units?: string | null
+          measurements?: Json | null
           preferences?: Json | null
           role?: Database["public"]["Enums"]["user_role"] | null
           stripe_account_id?: string | null
@@ -164,6 +166,7 @@ export type Database = {
           id?: string
           last_active_at?: string | null
           measurement_units?: string | null
+          measurements?: Json | null
           preferences?: Json | null
           role?: Database["public"]["Enums"]["user_role"] | null
           stripe_account_id?: string | null

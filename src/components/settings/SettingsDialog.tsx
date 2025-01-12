@@ -12,6 +12,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AccountSettings } from "./AccountSettings";
 import { PreferencesSettings } from "./PreferencesSettings";
 import { NotificationSettings } from "./NotificationSettings";
+import { MeasurementsSettings } from "./MeasurementsSettings";
 
 export function SettingsDialog() {
   return (
@@ -30,13 +31,17 @@ export function SettingsDialog() {
           </DialogDescription>
         </DialogHeader>
         <Tabs defaultValue="account" className="w-full">
-          <TabsList className="grid w-full grid-cols-3">
+          <TabsList className="grid w-full grid-cols-4">
             <TabsTrigger value="account">Account</TabsTrigger>
+            <TabsTrigger value="measurements">Measurements</TabsTrigger>
             <TabsTrigger value="preferences">Preferences</TabsTrigger>
             <TabsTrigger value="notifications">Notifications</TabsTrigger>
           </TabsList>
           <TabsContent value="account">
             <AccountSettings />
+          </TabsContent>
+          <TabsContent value="measurements">
+            <MeasurementsSettings />
           </TabsContent>
           <TabsContent value="preferences">
             <PreferencesSettings />
