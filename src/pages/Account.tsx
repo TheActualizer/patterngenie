@@ -15,6 +15,7 @@ export default function Account() {
   const { toast } = useToast();
   const [loading, setLoading] = useState(true);
   const [profile, setProfile] = useState<any>(null);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
   useEffect(() => {
     getProfile();
@@ -22,10 +23,7 @@ export default function Account() {
 
   useEffect(() => {
     if (location.pathname === "/account/settings") {
-      const settingsButton = document.querySelector('[aria-label="Settings"]') as HTMLButtonElement;
-      if (settingsButton) {
-        settingsButton.click();
-      }
+      setIsSettingsOpen(true);
     }
   }, [location.pathname]);
 
@@ -38,7 +36,6 @@ export default function Account() {
         return;
       }
 
-      // First try to get the profile
       const { data: existingProfile, error: fetchError } = await supabase
         .from('profiles')
         .select('*')
@@ -47,7 +44,6 @@ export default function Account() {
 
       if (fetchError) throw fetchError;
       
-      // If profile doesn't exist, create it
       if (!existingProfile) {
         const { data: newProfile, error: insertError } = await supabase
           .from('profiles')
@@ -95,7 +91,7 @@ export default function Account() {
           <Card className="md:col-span-2">
             <CardHeader>
               <CardTitle>Profile Overview</CardTitle>
-              <CardDescription>Manage your account details and preferences</CardDescription>
+              <CardDescription>View your account details and access settings</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="flex items-center space-x-4">
@@ -109,10 +105,13 @@ export default function Account() {
                 </div>
               </div>
               <div className="space-y-2">
-                <h4 className="font-medium">Preferences</h4>
-                <p className="text-sm">Measurement Units: {profile?.measurement_units || "Not set"}</p>
-                <Button variant="outline" onClick={() => navigate("/account/settings")}>
-                  Edit Profile
+                <h4 className="font-medium">Quick Actions</h4>
+                <Button 
+                  variant="outline" 
+                  onClick={() => setIsSettingsOpen(true)}
+                  className="w-full"
+                >
+                  Open Settings
                 </Button>
               </div>
             </CardContent>
@@ -144,6 +143,7 @@ export default function Account() {
           </Card>
         </div>
       </main>
+      <SettingsDialog open={isSettingsOpen} onOpenChange={setIsSettingsOpen} />
     </div>
   );
 }
