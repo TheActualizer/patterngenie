@@ -11,6 +11,15 @@ import { toast } from "sonner";
 import { Save, Share2, Undo, Redo, Download } from "lucide-react";
 import { useDebounce } from "@/hooks/use-debounce";
 
+interface PatternData {
+  prompt: string;
+  measurements: {
+    bust: number;
+    waist: number;
+    hips: number;
+  };
+}
+
 const DesignStudio = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -25,18 +34,23 @@ const DesignStudio = () => {
   const [title, setTitle] = useState("Untitled Project");
   const [isSaving, setIsSaving] = useState(false);
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
-  const [projectData, setProjectData] = useState<any>({});
+  const [projectData, setProjectData] = useState<PatternData>({
+    prompt: "",
+    measurements: {
+      bust: 36,
+      waist: 28,
+      hips: 38,
+    },
+  });
   
   const debouncedProjectData = useDebounce(projectData, 2000);
 
-  // Load existing project if projectId is present
   useEffect(() => {
     if (projectId) {
       loadProject();
     }
   }, [projectId]);
 
-  // Auto-save when project data changes
   useEffect(() => {
     if (projectId && debouncedProjectData) {
       saveProject(true);
@@ -61,13 +75,14 @@ const DesignStudio = () => {
 
       if (project) {
         setTitle(project.title);
-        setPrompt(project.pattern_data.prompt || "");
-        setMeasurements(project.pattern_data.measurements || {
+        const patternData = project.pattern_data as PatternData;
+        setPrompt(patternData.prompt || "");
+        setMeasurements(patternData.measurements || {
           bust: 36,
           waist: 28,
           hips: 38,
         });
-        setProjectData(project.pattern_data);
+        setProjectData(patternData);
         setLastSaved(new Date(project.updated_at));
       }
     } catch (error) {
@@ -91,16 +106,16 @@ const DesignStudio = () => {
         pattern_data: {
           prompt,
           measurements,
-          ...projectData
-        },
+        } as PatternData,
         user_id: session.session.user.id,
         is_draft: true
       };
 
+      console.log('Saving project with data:', projectPayload);
+
       let result;
       
       if (projectId) {
-        // Update existing project
         result = await supabase
           .from('projects')
           .update(projectPayload)
@@ -108,7 +123,6 @@ const DesignStudio = () => {
           .select()
           .single();
       } else {
-        // Create new project
         result = await supabase
           .from('projects')
           .insert([projectPayload])
@@ -118,7 +132,9 @@ const DesignStudio = () => {
 
       if (result.error) throw result.error;
 
+      console.log('Project saved successfully:', result.data);
       setLastSaved(new Date());
+      
       if (!isAutoSave) {
         toast.success("Project saved successfully");
       }
@@ -136,12 +152,10 @@ const DesignStudio = () => {
   };
 
   const handleExport = () => {
-    // TODO: Implement pattern export functionality
     toast.info("Export functionality coming soon!");
   };
 
   const handleShare = () => {
-    // TODO: Implement sharing functionality
     toast.info("Sharing functionality coming soon!");
   };
 
@@ -201,7 +215,6 @@ const DesignStudio = () => {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Left Panel - Controls */}
           <div className="space-y-6 bg-gray-50 p-6 rounded-lg">
             <div>
               <h2 className="text-2xl font-display font-semibold mb-4">Design Studio</h2>
@@ -291,14 +304,12 @@ const DesignStudio = () => {
                   <DrawerTitle>Advanced Pattern Settings</DrawerTitle>
                 </DrawerHeader>
                 <div className="p-4 space-y-4">
-                  {/* Placeholder for advanced settings */}
                   <p className="text-muted-foreground">Advanced settings coming soon...</p>
                 </div>
               </DrawerContent>
             </Drawer>
           </div>
 
-          {/* Center Panel - Pattern View */}
           <div className="bg-gray-50 p-6 rounded-lg flex items-center justify-center">
             <div className="text-center space-y-4">
               <div className="w-full aspect-square bg-white rounded-lg border-2 border-dashed border-gray-300 flex items-center justify-center">
@@ -308,7 +319,6 @@ const DesignStudio = () => {
             </div>
           </div>
 
-          {/* Right Panel - Preview */}
           <div className="bg-gray-50 p-6 rounded-lg">
             <h3 className="text-lg font-semibold mb-4">3D Preview</h3>
             <div className="aspect-[3/4] bg-white rounded-lg border-2 border-dashed border-gray-300 flex items-center justify-center">
