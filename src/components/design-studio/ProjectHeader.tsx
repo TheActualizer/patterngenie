@@ -164,14 +164,16 @@ export const ProjectHeader = ({
         </div>
 
         <div className="flex flex-col items-center gap-1">
-          <div className="relative group w-full max-w-md">
-            <Input
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              className="text-xl font-display font-medium bg-transparent border-0 px-0 focus-visible:ring-0 text-center w-full hover:bg-gray-50/50 transition-colors"
-              placeholder="Enter project name..."
-            />
-            <Pencil className="w-4 h-4 text-gray-400 absolute right-2 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
+          <div className="relative w-full max-w-md">
+            <div className="flex items-center justify-center gap-2 bg-gray-50/80 hover:bg-gray-100/80 transition-colors rounded-lg px-4 py-2">
+              <Input
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                className="text-xl font-display font-medium bg-transparent border-0 px-0 focus-visible:ring-0 text-center w-full placeholder:text-gray-400"
+                placeholder="Enter project name..."
+              />
+              <Pencil className="w-4 h-4 text-gray-400 flex-shrink-0" />
+            </div>
           </div>
           <span className="text-sm text-gray-500">
             {lastSaved ? `Last saved ${lastSaved.toLocaleTimeString()}` : "Not saved yet"}
