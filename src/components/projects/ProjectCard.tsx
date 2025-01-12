@@ -25,6 +25,8 @@ interface Project {
   is_draft: boolean;
   created_at: string;
   updated_at: string;
+  published_pattern_id: string | null;
+  published_at: string | null;
 }
 
 interface ProjectCardProps {
@@ -81,13 +83,25 @@ export const ProjectCard = ({ project, onProjectDeleted, onProjectDuplicated }: 
             difficulty: 'beginner', // Default difficulty
             format: ['pdf'], // Default format
             pattern_data: project.pattern_data,
-            designer_id: session.user.id // Set the current user as the designer
+            designer_id: session.user.id
           }
         ])
         .select()
         .single();
 
       if (patternError) throw patternError;
+
+      // Update the project to link it to the published pattern
+      const { error: updateError } = await supabase
+        .from('projects')
+        .update({
+          published_pattern_id: pattern.id,
+          published_at: new Date().toISOString(),
+          is_draft: false
+        })
+        .eq('id', project.id);
+
+      if (updateError) throw updateError;
 
       toast.success("Project published to marketplace! You can now set its price and other details.");
       navigate(`/marketplace?pattern=${pattern.id}`);
@@ -134,11 +148,15 @@ export const ProjectCard = ({ project, onProjectDeleted, onProjectDuplicated }: 
             {project.title || 'Untitled Project'}
           </CardTitle>
           <div className="flex items-center gap-2">
-            {project.is_draft && (
+            {project.published_pattern_id ? (
+              <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">
+                Published
+              </span>
+            ) : project.is_draft ? (
               <span className="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded">
                 Draft
               </span>
-            )}
+            ) : null}
             <div className="flex gap-2">
               <Button
                 variant="ghost"
@@ -203,39 +221,41 @@ export const ProjectCard = ({ project, onProjectDeleted, onProjectDuplicated }: 
         >
           Open Project
         </Button>
-        <AlertDialog>
-          <AlertDialogTrigger asChild>
-            <Button
-              variant="secondary"
-              className="flex gap-2 items-center"
-              disabled={publishingProject}
-            >
-              {publishingProject ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
-              ) : (
-                <>
-                  <Share2 className="h-4 w-4" />
+        {!project.published_pattern_id && (
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button
+                variant="secondary"
+                className="flex gap-2 items-center"
+                disabled={publishingProject}
+              >
+                {publishingProject ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <>
+                    <Share2 className="h-4 w-4" />
+                    Publish
+                  </>
+                )}
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Publish to Marketplace</AlertDialogTitle>
+                <AlertDialogDescription>
+                  This will create a new pattern in the marketplace based on your project.
+                  You'll be able to set the price and other details after publishing.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction onClick={handlePublishToMarketplace}>
                   Publish
-                </>
-              )}
-            </Button>
-          </AlertDialogTrigger>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Publish to Marketplace</AlertDialogTitle>
-              <AlertDialogDescription>
-                This will create a new pattern in the marketplace based on your project.
-                You'll be able to set the price and other details after publishing.
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction onClick={handlePublishToMarketplace}>
-                Publish
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        )}
       </CardFooter>
     </Card>
   );

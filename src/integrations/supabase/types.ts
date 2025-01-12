@@ -189,6 +189,8 @@ export type Database = {
           id: string
           is_draft: boolean | null
           pattern_data: Json
+          published_at: string | null
+          published_pattern_id: string | null
           title: string
           updated_at: string | null
           user_id: string | null
@@ -200,6 +202,8 @@ export type Database = {
           id?: string
           is_draft?: boolean | null
           pattern_data?: Json
+          published_at?: string | null
+          published_pattern_id?: string | null
           title: string
           updated_at?: string | null
           user_id?: string | null
@@ -211,12 +215,21 @@ export type Database = {
           id?: string
           is_draft?: boolean | null
           pattern_data?: Json
+          published_at?: string | null
+          published_pattern_id?: string | null
           title?: string
           updated_at?: string | null
           user_id?: string | null
           version?: number | null
         }
         Relationships: [
+          {
+            foreignKeyName: "projects_published_pattern_id_fkey"
+            columns: ["published_pattern_id"]
+            isOneToOne: false
+            referencedRelation: "patterns"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "projects_user_id_fkey"
             columns: ["user_id"]
