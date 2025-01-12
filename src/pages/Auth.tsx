@@ -6,7 +6,6 @@ import { useNavigate } from "react-router-dom";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useToast } from "@/components/ui/use-toast";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -14,58 +13,18 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import * as z from "zod";
-import { Loader2 } from "lucide-react";
-
-const signUpSchema = z.object({
-  email: z.string().email("Please enter a valid email address"),
-  password: z
-    .string()
-    .min(8, "Password must be at least 8 characters")
-    .regex(
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
-      "Password must contain at least one uppercase letter, one lowercase letter, and one number"
-    ),
-  fullName: z.string().min(2, "Full name must be at least 2 characters"),
-  username: z
-    .string()
-    .min(3, "Username must be at least 3 characters")
-    .regex(/^[a-zA-Z0-9_-]+$/, "Username can only contain letters, numbers, underscores, and hyphens"),
-});
+import { SignUpForm } from "@/components/auth/SignUpForm";
 
 const AuthPage = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
-  const [isLoading, setIsLoading] = useState(false);
   const [authError, setAuthError] = useState<string | null>(null);
-
-  const form = useForm<z.infer<typeof signUpSchema>>({
-    resolver: zodResolver(signUpSchema),
-    defaultValues: {
-      email: "",
-      password: "",
-      fullName: "",
-      username: "",
-    },
-  });
 
   useEffect(() => {
     const { data: authListener } = supabase.auth.onAuthStateChange(async (event, session) => {
       console.log("Auth state changed:", event, session);
       if (event === "SIGNED_IN") {
         try {
-          // Update to use Supabase Functions invoke
           const { data, error } = await supabase.functions.invoke('create-checkout-session', {
             headers: {
               Authorization: `Bearer ${session?.access_token}`,
@@ -90,7 +49,6 @@ const AuthPage = () => {
             title: "Error",
             description: "There was a problem setting up your payment. Please try again.",
           });
-          // Still navigate to home on error
           navigate("/");
         }
       }
@@ -107,55 +65,20 @@ const AuthPage = () => {
     };
   }, [navigate, toast]);
 
-  const onSubmit = async (values: z.infer<typeof signUpSchema>) => {
-    setIsLoading(true);
-    setAuthError(null);
+  const handleSignUpSuccess = () => {
+    toast({
+      title: "Account created!",
+      description: "Please check your email to verify your account.",
+    });
+  };
 
-    try {
-      // First create the user account
-      const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
-        email: values.email,
-        password: values.password,
-        options: {
-          data: {
-            full_name: values.fullName,
-            username: values.username,
-          },
-        },
-      });
-
-      if (signUpError) throw signUpError;
-
-      // If signup was successful, create the profile
-      if (signUpData.user) {
-        const { error: profileError } = await supabase
-          .from('profiles')
-          .insert([
-            {
-              id: signUpData.user.id,
-              full_name: values.fullName,
-              username: values.username,
-            }
-          ]);
-
-        if (profileError) throw profileError;
-      }
-
-      toast({
-        title: "Account created!",
-        description: "Please check your email to verify your account.",
-      });
-    } catch (error: any) {
-      console.error("Signup error:", error);
-      setAuthError(error.message);
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: error.message,
-      });
-    } finally {
-      setIsLoading(false);
-    }
+  const handleSignUpError = (error: Error) => {
+    setAuthError(error.message);
+    toast({
+      variant: "destructive",
+      title: "Error",
+      description: error.message,
+    });
   };
 
   return (
@@ -199,71 +122,15 @@ const AuthPage = () => {
                   />
                 </TabsContent>
                 <TabsContent value="signup">
-                  <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-                      <FormField
-                        control={form.control}
-                        name="fullName"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Full Name</FormLabel>
-                            <FormControl>
-                              <Input placeholder="John Doe" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      <FormField
-                        control={form.control}
-                        name="username"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Username</FormLabel>
-                            <FormControl>
-                              <Input placeholder="johndoe" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      <FormField
-                        control={form.control}
-                        name="email"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Email</FormLabel>
-                            <FormControl>
-                              <Input type="email" placeholder="john@example.com" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      <FormField
-                        control={form.control}
-                        name="password"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Password</FormLabel>
-                            <FormControl>
-                              <Input type="password" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      {authError && (
-                        <Alert variant="destructive">
-                          <AlertDescription>{authError}</AlertDescription>
-                        </Alert>
-                      )}
-                      <Button type="submit" className="w-full" disabled={isLoading}>
-                        {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                        Create Account
-                      </Button>
-                    </form>
-                  </Form>
+                  {authError && (
+                    <Alert variant="destructive" className="mb-4">
+                      <AlertDescription>{authError}</AlertDescription>
+                    </Alert>
+                  )}
+                  <SignUpForm 
+                    onSuccess={handleSignUpSuccess}
+                    onError={handleSignUpError}
+                  />
                 </TabsContent>
               </Tabs>
             </CardContent>
