@@ -3,7 +3,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerTrigger } from "@/components/ui/drawer";
-import { FilePlus, Settings } from "lucide-react";
+import { Settings } from "lucide-react";
 import { AdvancedSettingsContent } from "./AdvancedSettingsContent";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -31,20 +31,10 @@ export const DesignControls = ({
   const [designStyle, setDesignStyle] = useState("casual");
   const [features, setFeatures] = useState<string[]>([]);
 
-  const handleCreateNewPattern = () => {
-    toast.info("Creating new pattern...");
-  };
-
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-6 space-y-8">
+    <div className="bg-white/50 backdrop-blur-sm rounded-xl shadow-sm border border-gray-100/50 p-6 space-y-8">
       <div>
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-display font-semibold text-gray-900">Design Studio</h2>
-          <Button onClick={handleCreateNewPattern} className="gap-2">
-            <FilePlus className="w-4 h-4" />
-            New Pattern
-          </Button>
-        </div>
+        <h2 className="text-2xl font-display font-semibold text-gray-900 mb-6">Design Studio</h2>
         <div className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="prompt" className="text-sm font-medium text-gray-700">Describe your design</Label>
@@ -56,7 +46,7 @@ export const DesignControls = ({
               className="w-full"
             />
           </div>
-          <Button className="w-full">Generate Pattern</Button>
+          <Button className="w-full bg-primary hover:bg-primary/90">Generate Pattern</Button>
         </div>
       </div>
 
@@ -110,7 +100,7 @@ export const DesignControls = ({
 
       <Drawer>
         <DrawerTrigger asChild>
-          <Button variant="outline" className="w-full gap-2">
+          <Button variant="outline" className="w-full gap-2 hover:bg-primary hover:text-white transition-colors">
             <Settings className="w-4 h-4" />
             Advanced Settings
           </Button>
