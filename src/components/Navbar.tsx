@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useToast } from "@/components/ui/use-toast";
-import { UserCircle2, FolderOpen, Menu, LogOut } from "lucide-react";
+import { UserCircle2, FolderOpen, Menu, LogOut, Scissors } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { SettingsDialog } from "./settings/SettingsDialog";
 

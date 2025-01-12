@@ -16,6 +16,8 @@ interface Project {
   is_draft: boolean;
   created_at: string;
   updated_at: string;
+  published_pattern_id: string | null;
+  published_at: string | null;
 }
 
 export default function Projects() {
