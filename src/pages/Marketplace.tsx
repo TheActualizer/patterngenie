@@ -15,20 +15,14 @@ import {
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import { Database } from "@/integrations/supabase/types";
 
-interface Pattern {
-  id: string;
-  title: string;
-  description: string;
-  price: number;
-  category: string;
-  difficulty: string;
-  thumbnail_url: string;
-  designer_id: string;
-  sales_count: number;
-  views: number;
-  created_at: string;
-}
+type Pattern = Database["public"]["Tables"]["patterns"]["Row"] & {
+  profiles: { full_name: string | null } | null;
+};
+
+type PatternCategory = Database["public"]["Enums"]["pattern_category"];
+type DifficultyLevel = Database["public"]["Enums"]["difficulty_level"];
 
 export default function Marketplace() {
   const { toast } = useToast();
@@ -37,8 +31,8 @@ export default function Marketplace() {
   const [patterns, setPatterns] = useState<Pattern[]>([]);
   const [buyingPattern, setBuyingPattern] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
-  const [category, setCategory] = useState<string>("");
-  const [difficulty, setDifficulty] = useState<string>("");
+  const [category, setCategory] = useState<PatternCategory | "all">("all");
+  const [difficulty, setDifficulty] = useState<DifficultyLevel | "all">("all");
   const [sortBy, setSortBy] = useState<string>("newest");
 
   useEffect(() => {
@@ -69,10 +63,10 @@ export default function Marketplace() {
         .select('*, profiles(full_name)')
         .eq('is_approved', true);
 
-      if (category) {
+      if (category && category !== "all") {
         query = query.eq('category', category);
       }
-      if (difficulty) {
+      if (difficulty && difficulty !== "all") {
         query = query.eq('difficulty', difficulty);
       }
 
@@ -159,25 +153,27 @@ export default function Marketplace() {
             onChange={(e) => setSearchTerm(e.target.value)}
             className="md:w-1/3"
           />
-          <Select value={category} onValueChange={setCategory}>
+          <Select value={category} onValueChange={(value: PatternCategory | "all") => setCategory(value)}>
             <SelectTrigger className="md:w-1/4">
               <SelectValue placeholder="Category" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">All Categories</SelectItem>
+              <SelectItem value="all">All Categories</SelectItem>
               <SelectItem value="dresses">Dresses</SelectItem>
               <SelectItem value="tops">Tops</SelectItem>
               <SelectItem value="bottoms">Bottoms</SelectItem>
               <SelectItem value="outerwear">Outerwear</SelectItem>
               <SelectItem value="accessories">Accessories</SelectItem>
+              <SelectItem value="children">Children</SelectItem>
+              <SelectItem value="other">Other</SelectItem>
             </SelectContent>
           </Select>
-          <Select value={difficulty} onValueChange={setDifficulty}>
+          <Select value={difficulty} onValueChange={(value: DifficultyLevel | "all") => setDifficulty(value)}>
             <SelectTrigger className="md:w-1/4">
               <SelectValue placeholder="Difficulty" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">All Levels</SelectItem>
+              <SelectItem value="all">All Levels</SelectItem>
               <SelectItem value="beginner">Beginner</SelectItem>
               <SelectItem value="intermediate">Intermediate</SelectItem>
               <SelectItem value="advanced">Advanced</SelectItem>
