@@ -39,8 +39,7 @@ serve(async (req) => {
       limit: 1
     });
 
-    // Replace this with your actual price ID from Stripe
-    const price_id = "price_1OvXXXXXXXXXXXXX"; // You'll need to replace this with your actual price ID
+    const price_id = "price_1QgNMSJd7FprxTeFx3vMC5Kv";
 
     let customer_id = undefined;
     if (customers.data.length > 0) {
