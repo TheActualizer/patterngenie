@@ -56,14 +56,19 @@ export function MeasurementsSettings() {
         .from('profiles')
         .select('measurements')
         .eq('id', session.user.id)
-        .single();
+        .maybeSingle();
 
-      if (error) throw error;
+      if (error) {
+        console.error('Error loading measurements:', error);
+        toast.error("Failed to load measurements");
+        return;
+      }
+
       if (data?.measurements) {
-        setMeasurements(data.measurements);
+        setMeasurements(data.measurements as Measurements);
       }
     } catch (error) {
-      console.error('Error loading measurements:', error);
+      console.error('Error:', error);
       toast.error("Failed to load measurements");
     }
   };
@@ -81,16 +86,20 @@ export function MeasurementsSettings() {
       const { error } = await supabase
         .from('profiles')
         .update({
-          measurements,
+          measurements: measurements as Record<string, string | null>,
           updated_at: new Date().toISOString(),
         })
         .eq('id', session.user.id);
 
-      if (error) throw error;
+      if (error) {
+        console.error('Error updating measurements:', error);
+        toast.error("Failed to update measurements");
+        return;
+      }
       
       toast.success("Measurements updated successfully");
     } catch (error) {
-      console.error('Error updating measurements:', error);
+      console.error('Error:', error);
       toast.error("Failed to update measurements");
     } finally {
       setLoading(false);
