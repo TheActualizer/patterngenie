@@ -63,6 +63,7 @@ export const ProjectCard = ({ project, onProjectDeleted, onProjectDuplicated }: 
   const handlePublishToMarketplace = async () => {
     try {
       setPublishingProject(true);
+      console.log('Starting publish process for project:', project);
       
       // Get the current user's session
       const { data: { session } } = await supabase.auth.getSession();
@@ -78,18 +79,24 @@ export const ProjectCard = ({ project, onProjectDeleted, onProjectDuplicated }: 
           {
             title: project.title,
             description: project.description,
-            price: 0, // Default price, can be updated in marketplace
-            category: 'other', // Default category
-            difficulty: 'beginner', // Default difficulty
-            format: ['pdf'], // Default format
+            price: 0,
+            category: 'other',
+            difficulty: 'beginner',
+            format: ['pdf'],
             pattern_data: project.pattern_data,
-            designer_id: session.user.id
+            designer_id: session.user.id,
+            is_approved: false
           }
         ])
         .select()
         .single();
 
-      if (patternError) throw patternError;
+      if (patternError) {
+        console.error('Error creating pattern:', patternError);
+        throw patternError;
+      }
+
+      console.log('Created pattern:', pattern);
 
       // Update the project to link it to the published pattern
       const { error: updateError } = await supabase
@@ -101,10 +108,13 @@ export const ProjectCard = ({ project, onProjectDeleted, onProjectDuplicated }: 
         })
         .eq('id', project.id);
 
-      if (updateError) throw updateError;
+      if (updateError) {
+        console.error('Error updating project:', updateError);
+        throw updateError;
+      }
 
       toast.success("Project published to marketplace! You can now set its price and other details.");
-      navigate(`/marketplace?pattern=${pattern.id}`);
+      navigate(`/marketplace`);
     } catch (error) {
       console.error('Error publishing project:', error);
       toast.error("Failed to publish project to marketplace");
