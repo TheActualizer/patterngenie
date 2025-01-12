@@ -40,7 +40,6 @@ export function PatternChat({ prompt, setPrompt, fabricType, designStyle }: Patt
     setIsTyping(true);
     
     // Here we'll simulate the assistant's response based on the context
-    // In a real implementation, this would call an AI service
     let response = "";
     
     if (messages.length === 1) {
@@ -68,19 +67,23 @@ export function PatternChat({ prompt, setPrompt, fabricType, designStyle }: Patt
 
     const userMessage = input;
     setInput("");
+    
+    // First add the user message
     setMessages(prev => [...prev, { role: "user", content: userMessage }]);
+    
+    // Then generate the assistant response
     await generateAssistantResponse(userMessage);
   };
 
   return (
-    <div className="flex flex-col h-[400px] border rounded-lg bg-white">
+    <div className="flex flex-col h-[400px] border rounded-lg bg-white shadow-sm">
       <ScrollArea className="flex-1 p-4">
-        <div className="space-y-4">
+        <div className="space-y-4 min-h-full">
           {messages.map((message, i) => (
             <div
               key={i}
               className={cn(
-                "flex break-words",
+                "flex w-full break-words",
                 message.role === "assistant" ? "justify-start" : "justify-end"
               )}
             >
@@ -88,18 +91,18 @@ export function PatternChat({ prompt, setPrompt, fabricType, designStyle }: Patt
                 className={cn(
                   "max-w-[80%] rounded-lg px-4 py-2",
                   message.role === "assistant"
-                    ? "bg-muted text-muted-foreground"
+                    ? "bg-secondary text-secondary-foreground"
                     : "bg-primary text-primary-foreground"
                 )}
               >
-                {message.content}
+                <p className="text-sm whitespace-pre-wrap">{message.content}</p>
               </div>
             </div>
           ))}
           {isTyping && (
             <div className="flex justify-start">
-              <div className="bg-muted text-muted-foreground w-16 rounded-lg px-4 py-2">
-                ...
+              <div className="bg-secondary text-secondary-foreground w-16 rounded-lg px-4 py-2">
+                <p className="text-sm">...</p>
               </div>
             </div>
           )}
