@@ -53,7 +53,7 @@ export function Navbar() {
     <>
       <Link to="/marketplace">
         <Button variant="ghost" className="font-medium text-gray-600 hover:text-gray-900 hover:bg-purple-50">
-          Gallery
+          Marketplace
         </Button>
       </Link>
       <Link to="/design-studio">

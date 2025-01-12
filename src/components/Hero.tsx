@@ -33,7 +33,7 @@ export function Hero() {
                 </Link>
                 <Link to="/marketplace">
                   <Button variant="secondary" size="lg" className="w-full sm:w-auto mt-3 sm:mt-0 px-8 py-6 text-lg border-2 hover:bg-purple-50 transition-all duration-300">
-                    Gallery
+                    Browse Patterns
                   </Button>
                 </Link>
               </div>
