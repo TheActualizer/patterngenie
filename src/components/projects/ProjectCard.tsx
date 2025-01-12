@@ -62,6 +62,13 @@ export const ProjectCard = ({ project, onProjectDeleted, onProjectDuplicated }: 
     try {
       setPublishingProject(true);
       
+      // Get the current user's session
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        toast.error("Please sign in to publish your project");
+        return;
+      }
+
       // Create a new pattern from the project
       const { data: pattern, error: patternError } = await supabase
         .from('patterns')
@@ -73,7 +80,8 @@ export const ProjectCard = ({ project, onProjectDeleted, onProjectDuplicated }: 
             category: 'other', // Default category
             difficulty: 'beginner', // Default difficulty
             format: ['pdf'], // Default format
-            pattern_data: project.pattern_data
+            pattern_data: project.pattern_data,
+            designer_id: session.user.id // Set the current user as the designer
           }
         ])
         .select()
@@ -81,7 +89,7 @@ export const ProjectCard = ({ project, onProjectDeleted, onProjectDuplicated }: 
 
       if (patternError) throw patternError;
 
-      toast.success("Project published to marketplace");
+      toast.success("Project published to marketplace! You can now set its price and other details.");
       navigate(`/marketplace?pattern=${pattern.id}`);
     } catch (error) {
       console.error('Error publishing project:', error);
@@ -195,21 +203,39 @@ export const ProjectCard = ({ project, onProjectDeleted, onProjectDuplicated }: 
         >
           Open Project
         </Button>
-        <Button
-          variant="secondary"
-          className="flex gap-2 items-center"
-          onClick={handlePublishToMarketplace}
-          disabled={publishingProject}
-        >
-          {publishingProject ? (
-            <Loader2 className="h-4 w-4 animate-spin" />
-          ) : (
-            <>
-              <Share2 className="h-4 w-4" />
-              Publish
-            </>
-          )}
-        </Button>
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <Button
+              variant="secondary"
+              className="flex gap-2 items-center"
+              disabled={publishingProject}
+            >
+              {publishingProject ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <>
+                  <Share2 className="h-4 w-4" />
+                  Publish
+                </>
+              )}
+            </Button>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Publish to Marketplace</AlertDialogTitle>
+              <AlertDialogDescription>
+                This will create a new pattern in the marketplace based on your project.
+                You'll be able to set the price and other details after publishing.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction onClick={handlePublishToMarketplace}>
+                Publish
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </CardFooter>
     </Card>
   );
