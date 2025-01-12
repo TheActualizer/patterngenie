@@ -46,7 +46,7 @@ export const AvatarCustomization = () => {
   const [frontImageUrl, setFrontImageUrl] = useState<string | null>(null);
   const [sideImageUrl, setSideImageUrl] = useState<string | null>(null);
   const [measurements, setMeasurements] = useState<Measurements>(defaultMeasurements);
-  const [syncWithProfile, setSyncWithProfile] = useState(true); // Default to true for better UX
+  const [syncWithProfile, setSyncWithProfile] = useState(true);
   const [loading, setLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -77,7 +77,6 @@ export const AvatarCustomization = () => {
       console.log('Loaded profile data:', data);
 
       if (data?.measurements) {
-        // Ensure type safety by explicitly mapping the measurements
         const measurementsData = data.measurements as Record<string, string | null>;
         const typedMeasurements: Measurements = {
           bust: measurementsData.bust || null,
@@ -273,6 +272,11 @@ export const AvatarCustomization = () => {
     { key: 'sleeve_length', label: 'Sleeve Length' },
   ] as const;
 
+  const handleSaveClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    handleSaveMeasurements(false);
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
@@ -384,7 +388,7 @@ export const AvatarCustomization = () => {
                     <Input
                       id={key}
                       type="text"
-                      value={measurements[key]}
+                      value={measurements[key] || ''}
                       onChange={(e) => handleMeasurementChange(key, e.target.value)}
                       placeholder="Enter measurement"
                     />
@@ -405,7 +409,7 @@ export const AvatarCustomization = () => {
 
               <Button 
                 className="w-full" 
-                onClick={handleSaveMeasurements}
+                onClick={handleSaveClick}
                 disabled={loading}
               >
                 {loading ? "Saving..." : "Save Measurements"}
