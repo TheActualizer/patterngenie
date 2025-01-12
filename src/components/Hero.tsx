@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { Sparkles, Scissors } from "lucide-react";
+import { Sparkles } from "lucide-react";
 
 export function Hero() {
   return (
@@ -11,8 +11,43 @@ export function Hero() {
           <main className="mt-10 mx-auto max-w-7xl px-4 sm:mt-12 sm:px-6 md:mt-16 lg:mt-20 lg:px-8 xl:mt-28">
             <div className="text-center">
               <div className="flex justify-center mb-12">
-                <div className="w-24 h-24 bg-gradient-to-br from-[#9b87f5] to-[#7E69AB] rounded-3xl flex items-center justify-center shadow-2xl transform hover:scale-105 transition-all duration-300 hover:shadow-purple-300/50">
-                  <Scissors className="w-14 h-14 text-white transform -rotate-45 hover:rotate-0 transition-all duration-500" />
+                {/* AI Dress Logo */}
+                <div className="relative w-32 h-32 group">
+                  {/* Animated background circles */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-[#E5DEFF] via-[#D3E4FD] to-[#FDE1D3] rounded-full blur-xl opacity-75 animate-pulse"></div>
+                  <div className="absolute inset-0 bg-gradient-to-tr from-[#8B5CF6] via-[#D946EF] to-[#33C3F0] rounded-full blur-lg opacity-50 group-hover:opacity-75 transition-opacity duration-500"></div>
+                  
+                  {/* Dress Shape */}
+                  <div className="relative w-full h-full bg-gradient-to-b from-[#9b87f5] to-[#7E69AB] rounded-3xl overflow-hidden shadow-2xl transform hover:scale-105 transition-all duration-300 hover:shadow-purple-300/50">
+                    {/* Dress Pattern - Abstract AI Lines */}
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <svg className="w-20 h-20 text-white/90" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path 
+                          d="M12 3L20 8V16L12 21L4 16V8L12 3Z" 
+                          stroke="currentColor" 
+                          strokeWidth="1.5" 
+                          className="animate-[dash_3s_ease-in-out_infinite]"
+                          strokeDasharray="60"
+                          strokeDashoffset="60"
+                        />
+                        <path 
+                          d="M12 3V21M4 8L20 16M20 8L4 16" 
+                          stroke="currentColor" 
+                          strokeWidth="1.5" 
+                          className="animate-[dash_3s_ease-in-out_infinite]"
+                          strokeDasharray="40"
+                          strokeDashoffset="40"
+                        />
+                      </svg>
+                    </div>
+                    
+                    {/* Floating Particles */}
+                    <div className="absolute inset-0">
+                      <div className="absolute top-1/4 left-1/4 w-1 h-1 bg-white rounded-full animate-ping"></div>
+                      <div className="absolute top-3/4 right-1/4 w-1 h-1 bg-white rounded-full animate-ping [animation-delay:500ms]"></div>
+                      <div className="absolute top-1/2 left-1/2 w-1 h-1 bg-white rounded-full animate-ping [animation-delay:1000ms]"></div>
+                    </div>
+                  </div>
                 </div>
               </div>
               <h1 className="text-5xl tracking-tight font-display font-bold text-gray-900 sm:text-6xl md:text-7xl mb-8">

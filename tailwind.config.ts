@@ -70,6 +70,17 @@ export default {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
+        dash: {
+          "0%": {
+            strokeDashoffset: "60",
+          },
+          "50%": {
+            strokeDashoffset: "0",
+          },
+          "100%": {
+            strokeDashoffset: "60",
+          },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
