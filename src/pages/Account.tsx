@@ -27,16 +27,33 @@ export default function Account() {
         return;
       }
 
-      const { data: profile, error } = await supabase
+      // First try to get the profile
+      const { data: existingProfile, error: fetchError } = await supabase
         .from('profiles')
         .select('*')
         .eq('id', session.user.id)
-        .single();
+        .maybeSingle();
 
-      if (error) throw error;
+      if (fetchError) throw fetchError;
       
-      if (profile) {
-        setProfile(profile);
+      // If profile doesn't exist, create it
+      if (!existingProfile) {
+        const { data: newProfile, error: insertError } = await supabase
+          .from('profiles')
+          .insert([
+            { 
+              id: session.user.id,
+              full_name: session.user.user_metadata.full_name,
+              avatar_url: session.user.user_metadata.avatar_url,
+            }
+          ])
+          .select()
+          .single();
+
+        if (insertError) throw insertError;
+        setProfile(newProfile);
+      } else {
+        setProfile(existingProfile);
       }
     } catch (error) {
       console.error('Error loading profile:', error);
