@@ -20,37 +20,43 @@ export const DesignControls = ({
   const [features, setFeatures] = useState<string[]>([]);
 
   return (
-    <div className="bg-white/50 backdrop-blur-sm rounded-xl shadow-sm border border-gray-100/50 p-6 space-y-6">
-      <AvatarCustomization />
+    <div className="space-y-8">
+      <div className="bg-white/10 backdrop-blur-md rounded-xl border border-white/20 shadow-xl p-8 transition-all duration-300 hover:shadow-2xl hover:bg-white/15">
+        <AvatarCustomization />
+      </div>
       
-      <Drawer>
-        <DrawerTrigger asChild>
-          <Button variant="outline" className="w-full gap-2 hover:bg-primary hover:text-white transition-colors">
-            <Settings className="w-4 h-4" />
-            Advanced Settings
-          </Button>
-        </DrawerTrigger>
-        <DrawerContent>
-          <DrawerHeader>
-            <DrawerTitle>Advanced Pattern Settings</DrawerTitle>
-          </DrawerHeader>
-          <AdvancedSettingsContent
-            fabricType={fabricType}
-            setFabricType={setFabricType}
-            designStyle={designStyle}
-            setDesignStyle={setDesignStyle}
-            features={features}
-            setFeatures={setFeatures}
-          />
-        </DrawerContent>
-      </Drawer>
+      <div className="bg-white/10 backdrop-blur-md rounded-xl border border-white/20 shadow-xl p-8 transition-all duration-300 hover:shadow-2xl hover:bg-white/15">
+        <Drawer>
+          <DrawerTrigger asChild>
+            <Button variant="outline" className="w-full gap-2 hover:bg-primary hover:text-white transition-colors border-white/20 backdrop-blur-sm">
+              <Settings className="w-4 h-4" />
+              Advanced Settings
+            </Button>
+          </DrawerTrigger>
+          <DrawerContent>
+            <DrawerHeader>
+              <DrawerTitle>Advanced Pattern Settings</DrawerTitle>
+            </DrawerHeader>
+            <AdvancedSettingsContent
+              fabricType={fabricType}
+              setFabricType={setFabricType}
+              designStyle={designStyle}
+              setDesignStyle={setDesignStyle}
+              features={features}
+              setFeatures={setFeatures}
+            />
+          </DrawerContent>
+        </Drawer>
+      </div>
 
-      <PatternChat 
-        prompt={prompt}
-        setPrompt={setPrompt}
-        fabricType={fabricType}
-        designStyle={designStyle}
-      />
+      <div className="bg-white/10 backdrop-blur-md rounded-xl border border-white/20 shadow-xl p-8 transition-all duration-300 hover:shadow-2xl hover:bg-white/15">
+        <PatternChat 
+          prompt={prompt}
+          setPrompt={setPrompt}
+          fabricType={fabricType}
+          designStyle={designStyle}
+        />
+      </div>
     </div>
   );
 };

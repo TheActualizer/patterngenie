@@ -31,61 +31,63 @@ export const PatternPreview = ({ onExport }: PatternPreviewProps) => {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-6">
-        <h3 className="text-lg font-semibold mb-4 text-gray-900">3D Preview</h3>
-        <div className="aspect-[3/4] bg-gray-50 rounded-lg border-2 border-dashed border-gray-200 flex items-center justify-center mb-4 transition-colors hover:bg-gray-100/50">
-          <p className="text-gray-500 font-medium">3D Preview Coming Soon</p>
+    <div className="space-y-8">
+      <div className="bg-white/10 backdrop-blur-md rounded-xl border border-white/20 shadow-xl p-8 transition-all duration-300 hover:shadow-2xl hover:bg-white/15">
+        <h3 className="text-lg font-semibold mb-6 text-white/90 font-display">3D Preview</h3>
+        <div className="aspect-[3/4] bg-black/20 rounded-lg border-2 border-dashed border-white/20 flex items-center justify-center mb-6 transition-colors hover:bg-black/30">
+          <p className="text-white/60 font-medium">3D Preview Coming Soon</p>
         </div>
-        <Button variant="outline" className="w-full">Toggle View Mode</Button>
+        <Button variant="outline" className="w-full border-white/20 backdrop-blur-sm hover:bg-white/10">
+          Toggle View Mode
+        </Button>
       </div>
 
-      <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-6">
-        <div className="text-center space-y-4">
-          <div className="w-full aspect-square bg-gray-50 rounded-lg border-2 border-dashed border-gray-200 flex items-center justify-center transition-colors hover:bg-gray-100/50">
-            <p className="text-gray-500 font-medium">2D Pattern View</p>
+      <div className="bg-white/10 backdrop-blur-md rounded-xl border border-white/20 shadow-xl p-8 transition-all duration-300 hover:shadow-2xl hover:bg-white/15">
+        <div className="text-center space-y-6">
+          <div className="w-full aspect-square bg-black/20 rounded-lg border-2 border-dashed border-white/20 flex items-center justify-center transition-colors hover:bg-black/30">
+            <p className="text-white/60 font-medium">2D Pattern View</p>
           </div>
+          
+          <Dialog open={showExportDialog} onOpenChange={setShowExportDialog}>
+            <DialogTrigger asChild>
+              <Button className="w-full bg-primary hover:bg-primary/90">Export Pattern</Button>
+            </DialogTrigger>
+            <DialogContent className="bg-white/10 backdrop-blur-xl border border-white/20">
+              <DialogHeader>
+                <DialogTitle className="text-white/90">Export Pattern</DialogTitle>
+              </DialogHeader>
+              <div className="space-y-4 py-4">
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-white/80">
+                    Select Export Format
+                  </label>
+                  <Select
+                    value={selectedFormat}
+                    onValueChange={setSelectedFormat}
+                  >
+                    <SelectTrigger className="border-white/20 bg-black/20">
+                      <SelectValue placeholder="Select format" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="pdf">PDF (Print Ready)</SelectItem>
+                      <SelectItem value="dxf">DXF (CAD Software)</SelectItem>
+                      <SelectItem value="svg">SVG (Vector Graphics)</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <p className="text-sm text-white/60">
+                    {selectedFormat === "pdf" && "Best for home printing and professional print shops"}
+                    {selectedFormat === "dxf" && "Compatible with CAD software and cutting machines"}
+                    {selectedFormat === "svg" && "Ideal for digital editing and scaling"}
+                  </p>
+                </div>
+                <Button onClick={handleExport} className="w-full bg-primary hover:bg-primary/90">
+                  Export as {selectedFormat.toUpperCase()}
+                </Button>
+              </div>
+            </DialogContent>
+          </Dialog>
         </div>
       </div>
-
-      <Dialog open={showExportDialog} onOpenChange={setShowExportDialog}>
-        <DialogTrigger asChild>
-          <Button className="w-full" variant="default">Export Pattern</Button>
-        </DialogTrigger>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Export Pattern</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4 py-4">
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-700">
-                Select Export Format
-              </label>
-              <Select
-                value={selectedFormat}
-                onValueChange={setSelectedFormat}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select format" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="pdf">PDF (Print Ready)</SelectItem>
-                  <SelectItem value="dxf">DXF (CAD Software)</SelectItem>
-                  <SelectItem value="svg">SVG (Vector Graphics)</SelectItem>
-                </SelectContent>
-              </Select>
-              <p className="text-sm text-gray-500">
-                {selectedFormat === "pdf" && "Best for home printing and professional print shops"}
-                {selectedFormat === "dxf" && "Compatible with CAD software and cutting machines"}
-                {selectedFormat === "svg" && "Ideal for digital editing and scaling"}
-              </p>
-            </div>
-            <Button onClick={handleExport} className="w-full">
-              Export as {selectedFormat.toUpperCase()}
-            </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 };

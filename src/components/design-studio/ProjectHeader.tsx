@@ -54,13 +54,13 @@ export const ProjectHeader = ({
   };
 
   return (
-    <div className="space-y-6">
-      <div className="bg-white/50 backdrop-blur-sm rounded-xl shadow-sm border border-gray-100/50 p-4 space-y-4">
+    <div className="space-y-6 animate-fade-in">
+      <div className="bg-white/5 backdrop-blur-xl rounded-xl border border-white/20 shadow-2xl p-6 space-y-6">
         <div className="flex items-center justify-between gap-4">
           <Button
             variant="outline"
             onClick={() => navigate('/design-studio')}
-            className="gap-2 hover:bg-primary hover:text-white transition-colors"
+            className="gap-2 hover:bg-primary hover:text-white transition-colors border-white/20"
           >
             <Plus className="w-4 h-4" />
             New Pattern
@@ -71,7 +71,7 @@ export const ProjectHeader = ({
               variant="ghost"
               size="sm"
               onClick={() => toast.info("Undo functionality coming soon!")}
-              className="text-gray-500 hover:text-gray-700"
+              className="text-white/60 hover:text-white/90"
             >
               <Undo className="w-4 h-4" />
             </Button>
@@ -79,7 +79,7 @@ export const ProjectHeader = ({
               variant="ghost"
               size="sm"
               onClick={() => toast.info("Redo functionality coming soon!")}
-              className="text-gray-500 hover:text-gray-700"
+              className="text-white/60 hover:text-white/90"
             >
               <Redo className="w-4 h-4" />
             </Button>
@@ -89,15 +89,15 @@ export const ProjectHeader = ({
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="text-gray-500 hover:text-gray-700"
+                  className="text-white/60 hover:text-white/90"
                 >
                   <Share2 className="w-4 h-4" />
                 </Button>
               </DialogTrigger>
-              <DialogContent>
+              <DialogContent className="bg-white/10 backdrop-blur-xl border border-white/20">
                 <DialogHeader>
-                  <DialogTitle>Share Pattern</DialogTitle>
-                  <DialogDescription>
+                  <DialogTitle className="text-white/90">Share Pattern</DialogTitle>
+                  <DialogDescription className="text-white/60">
                     Share your pattern design with others
                   </DialogDescription>
                 </DialogHeader>
@@ -106,9 +106,9 @@ export const ProjectHeader = ({
                     <Input
                       readOnly
                       value={currentUrl}
-                      className="flex-1"
+                      className="flex-1 bg-black/20 border-white/20 text-white/90"
                     />
-                    <Button onClick={handleCopyLink} variant="secondary">
+                    <Button onClick={handleCopyLink} variant="secondary" className="backdrop-blur-sm">
                       Copy Link
                     </Button>
                   </div>
@@ -116,14 +116,14 @@ export const ProjectHeader = ({
                     <Button
                       onClick={handleShareOnTwitter}
                       variant="outline"
-                      className="flex-1"
+                      className="flex-1 border-white/20"
                     >
                       Share on Twitter
                     </Button>
                     <Button
                       onClick={handleShareOnFacebook}
                       variant="outline"
-                      className="flex-1"
+                      className="flex-1 border-white/20"
                     >
                       Share on Facebook
                     </Button>
@@ -136,7 +136,7 @@ export const ProjectHeader = ({
               variant="ghost"
               size="sm"
               onClick={onExport}
-              className="text-gray-500 hover:text-gray-700"
+              className="text-white/60 hover:text-white/90"
             >
               <Download className="w-4 h-4" />
             </Button>
@@ -155,10 +155,10 @@ export const ProjectHeader = ({
           <Input
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            className="text-xl font-display font-medium bg-transparent border-0 px-0 focus-visible:ring-0 text-center w-full max-w-md"
+            className="text-xl font-display font-medium bg-transparent border-0 px-0 focus-visible:ring-0 text-center w-full max-w-md text-white/90"
             placeholder="Enter project name..."
           />
-          <span className="text-sm text-gray-500">
+          <span className="text-sm text-white/60">
             {lastSaved ? `Last saved ${lastSaved.toLocaleTimeString()}` : "Not saved yet"}
           </span>
         </div>
