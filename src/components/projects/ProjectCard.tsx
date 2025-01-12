@@ -2,13 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Loader2, Download, Trash, MoreVertical } from "lucide-react";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { Loader2, Download, Trash, Share2 } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -42,6 +36,7 @@ interface ProjectCardProps {
 export const ProjectCard = ({ project, onProjectDeleted, onProjectDuplicated }: ProjectCardProps) => {
   const navigate = useNavigate();
   const [deletingProject, setDeletingProject] = useState(false);
+  const [publishingProject, setPublishingProject] = useState(false);
 
   const handleDeleteProject = async () => {
     try {
@@ -60,6 +55,39 @@ export const ProjectCard = ({ project, onProjectDeleted, onProjectDuplicated }: 
       toast.error("Failed to delete project");
     } finally {
       setDeletingProject(false);
+    }
+  };
+
+  const handlePublishToMarketplace = async () => {
+    try {
+      setPublishingProject(true);
+      
+      // Create a new pattern from the project
+      const { data: pattern, error: patternError } = await supabase
+        .from('patterns')
+        .insert([
+          {
+            title: project.title,
+            description: project.description,
+            price: 0, // Default price, can be updated in marketplace
+            category: 'other', // Default category
+            difficulty: 'beginner', // Default difficulty
+            format: ['pdf'], // Default format
+            pattern_data: project.pattern_data
+          }
+        ])
+        .select()
+        .single();
+
+      if (patternError) throw patternError;
+
+      toast.success("Project published to marketplace");
+      navigate(`/marketplace?pattern=${pattern.id}`);
+    } catch (error) {
+      console.error('Error publishing project:', error);
+      toast.error("Failed to publish project to marketplace");
+    } finally {
+      setPublishingProject(false);
     }
   };
 
@@ -159,13 +187,28 @@ export const ProjectCard = ({ project, onProjectDeleted, onProjectDuplicated }: 
           Last updated: {new Date(project.updated_at).toLocaleDateString()}
         </p>
       </CardContent>
-      <CardFooter>
+      <CardFooter className="flex gap-2">
         <Button 
           variant="outline" 
-          className="w-full"
+          className="flex-1"
           onClick={() => navigate(`/design-studio?project=${project.id}`)}
         >
           Open Project
+        </Button>
+        <Button
+          variant="secondary"
+          className="flex gap-2 items-center"
+          onClick={handlePublishToMarketplace}
+          disabled={publishingProject}
+        >
+          {publishingProject ? (
+            <Loader2 className="h-4 w-4 animate-spin" />
+          ) : (
+            <>
+              <Share2 className="h-4 w-4" />
+              Publish
+            </>
+          )}
         </Button>
       </CardFooter>
     </Card>
